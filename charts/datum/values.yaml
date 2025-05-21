@@ -86,7 +86,7 @@ mining:
   address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
   coinbaseTagPrimary: "DATUM Gateway"
   coinbaseTagSecondary: "Cosmic Rocks"
-  poolHost: "datum-beta1.mine.ocean.xyz" # set to "" for solo mining
+  poolHost: "datum-beta1.mine.ocean.xyz"  # set to "" for solo mining
 
 bitcoin:
   rpcHost: "bitcoin:8332"
