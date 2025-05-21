@@ -5,11 +5,11 @@ keywords:
   - bitcoin
   - knots
 type: application
-version: 1.0.1
+version: 1.0.2
 home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin"
 sources:
   - "https://github.com/cosmic.rocks/bitcoin"
-icon: "https://raw.githubusercontent.com/cosmic.rocks/bitcoin/main/charts/bitcoin/icon.png"
+icon: "https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/bitcoin/icon.png"
 appVersion: "knots20250305"
 maintainers:
   - name: esomore
