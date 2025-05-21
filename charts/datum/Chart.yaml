@@ -17,7 +17,3 @@ maintainers:
   - name: esomore
     email: itamar@cosmic.rocks
 icon: "https://raw.githubusercontent.com/OCEAN-xyz/datum_gateway/3105546f3e92e62997a9bd3bc1b65afbc2c4ac7c/www/assets/icons/datum_logo.svg"
-dependencies:
-  - name: bitcoin
-    version: 1.0.2
-    repository: "file://../bitcoin"

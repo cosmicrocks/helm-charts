@@ -133,3 +133,39 @@ service:
     zmqpubhashblock: 8433
     p2p: 8333
     metrics: 9223
+
+datum:
+  enabled: false # Set to true to enable the datum sidecar
+  image:
+    repository: ghcr.io/cosmicrocks/datum
+    pullPolicy: Always
+    tag: "v0.3.1beta"
+  serviceAccount: # Note: Sidecars generally don't need separate service accounts if they operate under the main pod's SA
+    create: false # Typically false for a sidecar
+    name: ""
+  # Pod security context for datum sidecar (if different from main container)
+  # securityContext: {}
+  service: # Ports exposed by datum
+    stratumPort: 23334
+    apiPort: 8080
+  resources:
+    # limits:
+    #   memory: 4Gi
+    # requests:
+    #   cpu: 1
+    #   memory: 4Gi
+  persistence: # Persistence for datum, if needed, might require careful volume mounting
+    enabled: true
+    # existingClaim: ""
+    storageClass: {}
+    accessMode: ReadWriteOncePod # This might be an issue if bitcoin also uses ReadWriteOncePod for the same PV. Consider ReadWriteMany or separate PVs.
+    size: 1Gi
+  mining:
+    address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
+    coinbaseTagPrimary: "DATUM Gateway"
+    coinbaseTagSecondary: "Cosmic Rocks"
+    poolHost: "datum-beta1.mine.ocean.xyz"  # set to "" for solo mining
+  bitcoin: # Configuration for datum to connect to the bitcoin node
+    rpcHost: "localhost:8332" # Assuming bitcoin RPC is available on localhost within the pod
+    rpcuser: "rpcuser" # Should ideally use the same rpcuser as the main bitcoin container
+    secretName: "bitcoin-rpcpassword" # Should use the same secret
