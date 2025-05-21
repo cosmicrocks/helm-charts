@@ -1,0 +1,94 @@
+# Default values for datum.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: ghcr.io/cosmicrocks/datum
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "0.3.1beta"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Automatically mount a ServiceAccount's API credentials?
+  automount: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  labels:
+    tailscale.com/proxy-class: "tun"
+  annotations:
+    tailscale.com/expose: "true"
+    tailscale.com/hostname: "datum"
+  stratumPort: 23334
+  apiPort: 8080
+
+resources:
+  # limits:
+  #   memory: 4Gi
+  # requests:
+  #   cpu: 1
+  #   memory: 4Gi
+
+
+persistence:
+  enabled: true
+  # existingClaim: ""
+  storageClass: {}
+  accessMode: ReadWriteOncePod
+  size: 1Gi
+
+priorityClassName: "system-cluster-critical"
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 1
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app
+                operator: In
+                values:
+                  - bitcoin
+          topologyKey: kubernetes.io/hostname
+
+mining:
+  address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
+  coinbaseTagPrimary: "DATUM Gateway"
+  coinbaseTagSecondary: "Cosmic Rocks"
+  poolHost: "datum-beta1.mine.ocean.xyz" # set to "" for solo mining
+
+bitcoin:
+  rpcHost: "bitcoin:8332"
+  rpcuser: "rpcuser"
+  secretName: "bitcoin-rpcpassword"
