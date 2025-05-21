@@ -1,5 +1,5 @@
 # Cosmic Rocks Helm Charts
-
+[![Artifact Hub](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/cosmicrocks)](https://artifacthub.io/packages/search?repo=cosmicrocks)
 
 This repository contains Helm charts for deploying applications on Kubernetes.
 
