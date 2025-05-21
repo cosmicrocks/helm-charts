@@ -1,0 +1,23 @@
+apiVersion: v2
+name: datum
+description: The DATUM Gateway implements lightweight, efficient, client-side decentralized block template creation. This allows for true solo mining by constructing block templates directly, reducing reliance on traditional mining pool infrastructure for this task.
+type: application
+version: 1.0.0
+appVersion: "0.3.1beta"
+keywords:
+  - datum
+  - mining
+  - solo-mining
+home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum"
+sources:
+  - "https://github.com/cosmicrocks/datum"
+# Add an icon if available, otherwise comment out or remove
+# icon: "https://raw.githubusercontent.com/cosmic.rocks/datum/main/charts/datum/icon.png"
+maintainers:
+  - name: esomore
+    email: itamar@cosmic.rocks
+icon: "https://raw.githubusercontent.com/OCEAN-xyz/datum_gateway/3105546f3e92e62997a9bd3bc1b65afbc2c4ac7c/www/assets/icons/datum_logo.svg"
+dependencies:
+  - name: bitcoin
+    version: 1.0.2
+    repository: "file://../bitcoin"

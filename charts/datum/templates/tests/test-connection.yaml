@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "datum.fullname" . }}-test-connection"
+  labels:
+    {{- include "datum.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: netcat
+      image: busybox
+  command: ['sh', '-c']
+  args:
+    - |
+      echo '{"jsonrpc": "2.0", "method": "server.version", "params": ["", "1.4"], "id": 0}' | netcat {{ include "datum.fullname" . }} {{ .Values.service.port }}
+  restartPolicy: Never

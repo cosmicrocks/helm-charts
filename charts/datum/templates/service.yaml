@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "datum.fullname" . }}
+  {{- with .Values.service.labels }}
+  labels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+    {{- include "datum.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.stratumPort }}
+      targetPort: stratum
+      protocol: TCP
+      name: stratum
+    - port: {{ .Values.service.apiPort }}
+      targetPort: 8080
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "datum.selectorLabels" . | nindent 4 }}
