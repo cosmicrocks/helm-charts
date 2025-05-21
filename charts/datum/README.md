@@ -31,7 +31,7 @@ The DATUM Gateway implements lightweight, efficient, client-side decentralized b
 | fullnameOverride | string | `""` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/cosmicrocks/datum"` |  |
-| image.tag | string | `"0.3.1beta"` |  |
+| image.tag | string | `"v0.3.1beta"` |  |
 | imagePullSecrets | list | `[]` |  |
 | mining.address | string | `"bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"` |  |
 | mining.coinbaseTagPrimary | string | `"DATUM Gateway"` |  |
