@@ -1,0 +1,135 @@
+global:
+  network: mainnet
+  service:
+    ports:
+      rpc: 8332
+
+secrets:
+  create: true
+
+bitcoinGenericConfig:
+# ======== Core Settings ========
+- server=1
+- dbcrashratio=0.0001
+- txindex=1
+- printtoconsole=1
+- rpcuser=rpcuser
+# Consider using cookie-based auth or rpcauth instead.
+
+# ======== ZMQ (for Electrs, etc.) ========
+- zmqpubrawtx=tcp://0.0.0.0:8431
+- zmqpubrawblock=tcp://0.0.0.0:8432
+- zmqpubhashblock=tcp://0.0.0.0:8433
+
+# ======== Performance Tuning (16 GB RAM) ========
+- dbcache=4096                    # 4 GB DB cache
+- maxconnections=80              # Reasonable upper limit
+- rpcworkqueue=1000              # Large RPC queue
+- maxmempool=600                 # 600 MB mempool
+- blockreconstructionextratxn=10000
+
+# ======== OCEAN Policy Compliance ========
+- datacarrier=1                  # Enable OP_RETURN (OCEAN requires)
+- acceptnonstdtxn=0              # Default
+- acceptnonstddatacarrier=0      # Default
+- datacarriercost=1              # Default
+- datacarriersize=42             # Default
+- bytespersigop=20               # Default
+- bytespersigopstrict=20         # Default
+- maxscriptsize=1650             # Default
+- mempoolfullrbf=1               # Default
+- mempoolreplacement=fee,-optin  # Enforce full RBF (OCEAN requires)
+- mempooltruc=accept             # Default
+- minrelaytxfee=0.00001          # Default
+- permitbaremultisig=0           # Default
+- permitbarepubkey=0             # Default
+- rejectparasites=1              # Default
+- spkreuse=allow                 # Default
+
+# ======== Mining Block Template ========
+- blockmaxsize=3985000           # OCEAN override
+- blockmaxweight=3985000         # OCEAN override
+- blockmintxfee=0.00001         # Default
+- blockprioritysize=0           # OCEAN override
+
+replicaCount: 1
+
+priorityClassName: ""
+
+image:
+  repository: ghcr.io/cosmicrocks/knots
+  pullPolicy: Always
+  tag: "28.1.knots20250305"
+
+metrics:
+  podMonitor:
+    enabled: false
+    interval: 30s
+    scrapeTimeout: 20s
+
+extraInitContainers: []
+sidecarContainers: []
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: "bitcoin"
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 2000
+
+securityContext:
+  # capabilities:
+  #   drop:
+  #   - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 3000
+
+resources:
+  # limits:
+  #   memory: 16Gi
+  # requests:
+  #   cpu: 1000m
+  #   memory: 16Gi
+
+persistence:
+  enabled: false
+  storageClass: ""
+  # existingClaim: ""
+  accessMode: ReadWriteOnce
+  size: 900Gi
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+labels: {}
+
+podLabels:
+  app: bitcoin
+
+service:
+  type: ClusterIP
+  ports:
+    zmqpubrawtx: 8431
+    zmqpubrawblock: 8432
+    zmqpubhashblock: 8433
+    p2p: 8333
+    metrics: 9223

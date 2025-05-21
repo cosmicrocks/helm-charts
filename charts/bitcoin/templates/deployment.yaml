@@ -1,0 +1,173 @@
+{{ $checksum := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "bitcoin.fullname" . }}
+  labels:
+    {{- include "bitcoin.labels" . | nindent 4 }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+{{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+{{- end }}
+  selector:
+    matchLabels:
+      {{- include "bitcoin.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+    {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+        checksum/config: {{ $checksum }}
+    {{- end }}
+      labels:
+        {{- include "bitcoin.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      terminationGracePeriodSeconds: 300
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "bitcoin.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      {{- if .Values.extraInitContainers }}
+      {{- toYaml .Values.extraInitContainers | nindent 8 }}
+      {{- end }}
+        - name: copy-bitcoin-config
+          image: busybox
+          command:
+          - 'sh'
+          - '-c'
+          - |
+            cat <<EOF > /data/.bitcoin/bitcoin.conf
+            rpcpassword=$(cat /rpcpassword/password)
+            blocknotify=/data/.bitcoin/scripts/blocknotify.sh
+            $(cat /configmap/bitcoin.conf)
+            EOF
+            cp /configmap/blocknotify.sh /data/.bitcoin/scripts/blocknotify.sh
+            chmod +x /data/.bitcoin/scripts/blocknotify.sh
+          volumeMounts:
+            - name: configmap
+              mountPath: /configmap
+            - name: rpcpassword
+              mountPath: /rpcpassword
+            - name: config
+              mountPath: /data/.bitcoin/
+            - name: scripts
+              mountPath: /data/.bitcoin/scripts/
+      containers:
+      {{- if .Values.sidecarContainers }}
+      {{- toYaml .Values.sidecarContainers | nindent 8 }}
+      {{- end }}
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          command: ["/usr/local/bin/bitcoind"]
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "bitcoin-cli stop"]
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: RPC_USER
+              value: rpcuser
+            - name: RPC_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
+                  key: password
+            - name: REINDEX
+              value: "0" # 1 to reindex blocks
+            - name: REINDEX_CHAINSTATE
+              value: "0" # 1 to reindex chainstate (only utxo set, not txindex)
+            # Performance Tuning for 1cpu 1GB RAM
+            - name: DB_CACHE
+              value: {{ .Values.dbCache | default "100" | quote }}
+            - name: MAX_CONNECTIONS
+              value: {{ .Values.maxConnections | default "20" | quote }}
+            - name: RPC_WORK_QUEUE
+              value: {{ .Values.rpcWorkQueue | default "8" | quote }}
+            - name: MAX_MEMPOOL
+              value: {{ .Values.maxMempool | default "50" | quote }}
+            - name: BLOCK_RECONSTRUCTION_EXTRA_TXN
+              value: {{ .Values.blockReconstructionExtraTxn | default "5000" | quote }}
+          ports:
+            - name: rpc
+              containerPort: {{ .Values.global.service.ports.rpc }}
+            - name: p2p
+              containerPort: {{ .Values.service.ports.p2p }}
+            - name: zmqpubrawtx
+              containerPort: {{ .Values.service.ports.zmqpubrawtx }}
+            - name: zmqpubrawblock
+              containerPort: {{ .Values.service.ports.zmqpubrawblock }}
+          volumeMounts:
+            - name: data
+              mountPath: /data/.bitcoin
+            - name: config
+              mountPath: /data/.bitcoin/bitcoin.conf
+              subPath: bitcoin.conf
+            - name: scripts
+              mountPath: /data/.bitcoin/scripts
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: exporter
+          image: ghcr.io/esomore/bitcoin-prometheus-exporter:master
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+          - name: BITCOIN_RPC_HOST
+            value: 127.0.0.1
+          - name: BITCOIN_RPC_USER
+            value: rpcuser
+          - name: BITCOIN_RPC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
+                key: password
+          - name: METRICS_PORT
+            value: {{ .Values.service.ports.metrics | quote }}
+          - name: BITCOIN_RPC_PORT
+            value: {{ .Values.global.service.ports.rpc | quote }}
+          ports:
+          - name: metrics
+            containerPort: {{ .Values.service.ports.metrics }}
+      volumes:
+        - name: config
+          emptyDir: {}
+        - name: scripts
+          emptyDir: {}
+        - name: rpcpassword
+          secret:
+            secretName: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
+        - name: configmap
+          configMap:
+            name: {{ template "bitcoin.fullname" . }}
+        - name: data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "bitcoin.fullname" .) }}
+        {{- else }}
+          emptyDir: {}
+        {{- end -}}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

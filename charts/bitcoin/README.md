@@ -1,0 +1,100 @@
+# bitcoin
+
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
+
+A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam prevention.
+
+**Homepage:** <https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| esomore | <itamar@cosmic.rocks> |  |
+
+## Source Code
+
+* <https://github.com/cosmic.rocks/bitcoin>
+
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| autoscaling.enabled | bool | `false` |  |
+| bitcoinGenericConfig[0] | string | `"server=1"` |  |
+| bitcoinGenericConfig[10] | string | `"rpcworkqueue=1000"` |  |
+| bitcoinGenericConfig[11] | string | `"maxmempool=600"` |  |
+| bitcoinGenericConfig[12] | string | `"blockreconstructionextratxn=10000"` |  |
+| bitcoinGenericConfig[13] | string | `"datacarrier=1"` |  |
+| bitcoinGenericConfig[14] | string | `"acceptnonstdtxn=0"` |  |
+| bitcoinGenericConfig[15] | string | `"acceptnonstddatacarrier=0"` |  |
+| bitcoinGenericConfig[16] | string | `"datacarriercost=1"` |  |
+| bitcoinGenericConfig[17] | string | `"datacarriersize=42"` |  |
+| bitcoinGenericConfig[18] | string | `"bytespersigop=20"` |  |
+| bitcoinGenericConfig[19] | string | `"bytespersigopstrict=20"` |  |
+| bitcoinGenericConfig[1] | string | `"dbcrashratio=0.0001"` |  |
+| bitcoinGenericConfig[20] | string | `"maxscriptsize=1650"` |  |
+| bitcoinGenericConfig[21] | string | `"mempoolfullrbf=1"` |  |
+| bitcoinGenericConfig[22] | string | `"mempoolreplacement=fee,-optin"` |  |
+| bitcoinGenericConfig[23] | string | `"mempooltruc=accept"` |  |
+| bitcoinGenericConfig[24] | string | `"minrelaytxfee=0.00001"` |  |
+| bitcoinGenericConfig[25] | string | `"permitbaremultisig=0"` |  |
+| bitcoinGenericConfig[26] | string | `"permitbarepubkey=0"` |  |
+| bitcoinGenericConfig[27] | string | `"rejectparasites=1"` |  |
+| bitcoinGenericConfig[28] | string | `"spkreuse=allow"` |  |
+| bitcoinGenericConfig[29] | string | `"blockmaxsize=3985000"` |  |
+| bitcoinGenericConfig[2] | string | `"txindex=1"` |  |
+| bitcoinGenericConfig[30] | string | `"blockmaxweight=3985000"` |  |
+| bitcoinGenericConfig[31] | string | `"blockmintxfee=0.00001"` |  |
+| bitcoinGenericConfig[32] | string | `"blockprioritysize=0"` |  |
+| bitcoinGenericConfig[3] | string | `"printtoconsole=1"` |  |
+| bitcoinGenericConfig[4] | string | `"rpcuser=rpcuser"` |  |
+| bitcoinGenericConfig[5] | string | `"zmqpubrawtx=tcp://0.0.0.0:8431"` |  |
+| bitcoinGenericConfig[6] | string | `"zmqpubrawblock=tcp://0.0.0.0:8432"` |  |
+| bitcoinGenericConfig[7] | string | `"zmqpubhashblock=tcp://0.0.0.0:8433"` |  |
+| bitcoinGenericConfig[8] | string | `"dbcache=4096"` |  |
+| bitcoinGenericConfig[9] | string | `"maxconnections=80"` |  |
+| extraInitContainers | list | `[]` |  |
+| fullnameOverride | string | `"bitcoin"` |  |
+| global.network | string | `"mainnet"` |  |
+| global.service.ports.rpc | int | `8332` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"ghcr.io/cosmicrocks/knots"` |  |
+| image.tag | string | `"28.1.knots20250305"` |  |
+| imagePullSecrets | list | `[]` |  |
+| labels | object | `{}` |  |
+| metrics.podMonitor.enabled | bool | `false` |  |
+| metrics.podMonitor.interval | string | `"30s"` |  |
+| metrics.podMonitor.scrapeTimeout | string | `"20s"` |  |
+| nameOverride | string | `""` |  |
+| nodeSelector | object | `{}` |  |
+| persistence.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.enabled | bool | `false` |  |
+| persistence.size | string | `"900Gi"` |  |
+| persistence.storageClass | string | `""` |  |
+| podAnnotations | object | `{}` |  |
+| podLabels.app | string | `"bitcoin"` |  |
+| podSecurityContext.fsGroup | int | `2000` |  |
+| priorityClassName | string | `""` |  |
+| replicaCount | int | `1` |  |
+| resources | string | `nil` |  |
+| secrets.create | bool | `true` |  |
+| securityContext.readOnlyRootFilesystem | bool | `true` |  |
+| securityContext.runAsGroup | int | `3000` |  |
+| securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.runAsUser | int | `1000` |  |
+| service.ports.metrics | int | `9223` |  |
+| service.ports.p2p | int | `8333` |  |
+| service.ports.zmqpubhashblock | int | `8433` |  |
+| service.ports.zmqpubrawblock | int | `8432` |  |
+| service.ports.zmqpubrawtx | int | `8431` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.annotations | object | `{}` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `""` |  |
+| sidecarContainers | list | `[]` |  |
+| tolerations | list | `[]` |  |
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

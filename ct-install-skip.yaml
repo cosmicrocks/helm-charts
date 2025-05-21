@@ -1,0 +1,4 @@
+# ct-install-skip.yaml -- Avoid issues with Github Actions Kind Cluster during "ct install".
+chart-dirs:
+  - charts
+target-branch: main
