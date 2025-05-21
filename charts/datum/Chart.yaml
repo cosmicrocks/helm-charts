@@ -2,7 +2,7 @@ apiVersion: v2
 name: datum
 description: The DATUM Gateway implements lightweight, efficient, client-side decentralized block template creation. This allows for true solo mining by constructing block templates directly, reducing reliance on traditional mining pool infrastructure for this task.
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "0.3.1beta"
 keywords:
   - datum

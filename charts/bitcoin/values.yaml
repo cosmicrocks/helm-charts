@@ -164,7 +164,7 @@ datum:
     address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
     coinbaseTagPrimary: "DATUM Gateway"
     coinbaseTagSecondary: "Cosmic Rocks"
-    poolHost: "datum-beta1.mine.ocean.xyz"  # set to "" for solo mining
+    poolHost: "datum-beta1.mine.ocean.xyz" # set to "" for solo mining
   bitcoin: # Configuration for datum to connect to the bitcoin node
     rpcHost: "localhost:8332" # Assuming bitcoin RPC is available on localhost within the pod
     rpcuser: "rpcuser" # Should ideally use the same rpcuser as the main bitcoin container
