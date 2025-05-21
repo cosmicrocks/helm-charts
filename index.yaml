@@ -43,4 +43,33 @@ entries:
     urls:
     - https://github.com/cosmicrocks/helm-charts/releases/download/bitcoin-1.0.1/bitcoin-1.0.1.tgz
     version: 1.0.1
-generated: "2025-05-21T04:55:21.987014226Z"
+  datum:
+  - apiVersion: v2
+    appVersion: 0.3.1beta
+    created: "2025-05-21T05:28:31.633974002Z"
+    dependencies:
+    - name: bitcoin
+      repository: file://../bitcoin
+      version: 1.0.2
+    description: The DATUM Gateway implements lightweight, efficient, client-side
+      decentralized block template creation. This allows for true solo mining by constructing
+      block templates directly, reducing reliance on traditional mining pool infrastructure
+      for this task.
+    digest: 4d96da7bc2096971d53e64aa457428b3fb382621307cfdbf62293add8809b99d
+    home: https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum
+    icon: https://raw.githubusercontent.com/OCEAN-xyz/datum_gateway/3105546f3e92e62997a9bd3bc1b65afbc2c4ac7c/www/assets/icons/datum_logo.svg
+    keywords:
+    - datum
+    - mining
+    - solo-mining
+    maintainers:
+    - email: itamar@cosmic.rocks
+      name: esomore
+    name: datum
+    sources:
+    - https://github.com/cosmicrocks/datum
+    type: application
+    urls:
+    - https://github.com/cosmicrocks/helm-charts/releases/download/datum-1.0.0/datum-1.0.0.tgz
+    version: 1.0.0
+generated: "2025-05-21T05:28:31.633986155Z"
