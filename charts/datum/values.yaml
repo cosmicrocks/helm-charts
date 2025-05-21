@@ -8,7 +8,7 @@ image:
   repository: ghcr.io/cosmicrocks/datum
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "0.3.1beta"
+  tag: "v0.3.1beta"
 
 imagePullSecrets: []
 nameOverride: ""
