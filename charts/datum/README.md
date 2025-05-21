@@ -16,12 +16,6 @@ The DATUM Gateway implements lightweight, efficient, client-side decentralized b
 
 * <https://github.com/cosmicrocks/datum>
 
-## Requirements
-
-| Repository | Name | Version |
-|------------|------|---------|
-| file://../bitcoin | bitcoin | 1.0.2 |
-
 ## Values
 
 | Key | Type | Default | Description |
