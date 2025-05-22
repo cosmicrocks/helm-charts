@@ -6,7 +6,6 @@ This repository contains Helm charts for deploying applications on Kubernetes.
 ## Charts
 
 - [`bitcoin`](charts/bitcoin/README.md): Helm chart for deploying a Bitcoin node.
-- [`datum`](charts/datumn/README.md): Helm chart for deploying a Datumn node.
 
 ## Usage
 
