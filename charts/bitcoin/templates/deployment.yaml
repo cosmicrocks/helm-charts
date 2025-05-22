@@ -178,6 +178,8 @@ spec:
       volumes:
         - name: config
           emptyDir: {}
+        - name: scripts
+          emptyDir: {}
         - name: rpcpassword
           secret:
             secretName: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
