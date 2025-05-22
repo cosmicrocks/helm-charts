@@ -137,6 +137,10 @@ spec:
               value: "{{ .Values.bitcoin.blockMinTxFee | default 0.00001 }}"
             - name: BLOCK_PRIORITY_SIZE
               value: {{ .Values.bitcoin.blockPrioritySize | default 0 | toString | quote }}
+            - name: DATUM_HOST
+              value: {{ .Values.bitcoin.datumHost | default "127.0.0.1" | quote }}
+            - name: DATUM_PORT
+              value: {{ .Values.bitcoin.datumPort | default 8080 | toString | quote }}
 
             # Reindex flags
             - name: REINDEX

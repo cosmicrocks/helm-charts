@@ -47,6 +47,8 @@ bitcoin:
   spkReuse: "allow"  # Default
 
   # Mining Block Template
+  datumHost: 127.0.0.1
+  datumPort: 8080
   blockMaxSize: 3985000  # OCEAN override
   blockMaxWeight: 3985000  # OCEAN override
   blockMinTxFee: 0.00001  # Default
