@@ -51,14 +51,13 @@ spec:
           - 'sh'
           - '-c'
           - |
-            mkdir -p /data/.bitcoin/scripts
             cat <<EOF > /data/.bitcoin/bitcoin.conf
             rpcpassword=$(cat /rpcpassword/password)
-            blocknotify=/data/.bitcoin/scripts/blocknotify.sh
+            blocknotify=/data/.bitcoin/blocknotify.sh
             $(cat /configmap/bitcoin.conf)
             EOF
-            cp /configmap/blocknotify.sh /data/.bitcoin/scripts/blocknotify.sh
-            chmod +x /data/.bitcoin/scripts/blocknotify.sh
+            cp /configmap/blocknotify.sh /data/.bitcoin/blocknotify.sh
+            chmod +x /data/.bitcoin/blocknotify.sh
           volumeMounts:
             - name: configmap
               mountPath: /configmap

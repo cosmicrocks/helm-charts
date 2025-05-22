@@ -1,6 +1,6 @@
 # bitcoin
 
-![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
+![Version: 1.0.4](https://img.shields.io/badge/Version-1.0.4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
 
 A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam prevention.
 
@@ -48,6 +48,7 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | bitcoinGenericConfig[30] | string | `"blockmaxweight=3985000"` |  |
 | bitcoinGenericConfig[31] | string | `"blockmintxfee=0.00001"` |  |
 | bitcoinGenericConfig[32] | string | `"blockprioritysize=0"` |  |
+| bitcoinGenericConfig[33] | string | `"blocknotify=/data/.bitcoin/blocknotify.sh"` |  |
 | bitcoinGenericConfig[3] | string | `"printtoconsole=1"` |  |
 | bitcoinGenericConfig[4] | string | `"rpcuser=rpcuser"` |  |
 | bitcoinGenericConfig[5] | string | `"zmqpubrawtx=tcp://0.0.0.0:8431"` |  |

@@ -51,7 +51,7 @@ bitcoinGenericConfig:
 - blockmaxweight=3985000  # OCEAN override
 - blockmintxfee=0.00001  # Default
 - blockprioritysize=0  # OCEAN override
-
+- blocknotify=/data/.bitcoin/blocknotify.sh
 replicaCount: 1
 
 terminationGracePeriodSeconds: 10
