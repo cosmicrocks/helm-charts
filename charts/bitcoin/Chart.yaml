@@ -5,7 +5,7 @@ keywords:
   - bitcoin
   - knots
 type: application
-version: 1.0.3
+version: 1.0.4
 home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin"
 sources:
   - "https://github.com/cosmic.rocks/bitcoin"
