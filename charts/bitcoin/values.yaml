@@ -161,18 +161,18 @@ datum:
 
   # Stratum server configuration
   stratum:
-    maxClientsPerThread: 128   # Maximum clients per thread
-    maxThreads: 8              # Maximum number of threads
-    maxClients: 1024           # Maximum number of clients
-    vardiffMin: 16384          # Minimum variable difficulty
-    vardiffTargetSharesMin: 8  # Target shares minimum for vardiff
-    vardiffQuickdiffCount: 8   # Quickdiff count
-    vardiffQuickdiffDelta: 8   # Quickdiff delta
-    shareStaleSeconds: 120     # Seconds after which shares are considered stale
-    fingerprintMiners: true    # Enable miner fingerprinting
-    idleTimeoutNoSubscribe: 15 # Idle timeout for connections without subscribe
-    idleTimeoutNoShares: 7200  # Idle timeout for connections without shares
-    idleTimeoutMaxLastWork: 0  # Maximum time since last work (0 = disabled)
+    maxClientsPerThread: 128    # Maximum clients per thread
+    maxThreads: 8               # Maximum number of threads
+    maxClients: 1024            # Maximum number of clients
+    vardiffMin: 16384           # Minimum variable difficulty
+    vardiffTargetSharesMin: 8   # Target shares minimum for vardiff
+    vardiffQuickdiffCount: 8    # Quickdiff count
+    vardiffQuickdiffDelta: 8    # Quickdiff delta
+    shareStaleSeconds: 120      # Seconds after which shares are considered stale
+    fingerprintMiners: true     # Enable miner fingerprinting
+    idleTimeoutNoSubscribe: 15  # Idle timeout for connections without subscribe
+    idleTimeoutNoShares: 7200   # Idle timeout for connections without shares
+    idleTimeoutMaxLastWork: 0   # Maximum time since last work (0 = disabled)
 
   # Mining configuration
   mining:
