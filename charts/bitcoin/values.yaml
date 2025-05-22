@@ -143,12 +143,7 @@ datum:
     repository: ghcr.io/cosmicrocks/datum
     pullPolicy: Always
     tag: "v0.3.1beta"
-  serviceAccount:  # Note: Sidecars generally don't need separate service accounts if they operate under the main pod's SA
-    create: false  # Typically false for a sidecar
-    name: ""
-  # Pod security context for datum sidecar (if different from main container)
-  # securityContext: {}
-  service:  # Ports exposed by datum
+  service:
     stratumPort: 23334
     apiPort: 8080
   resources:

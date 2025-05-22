@@ -78,8 +78,6 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | datum.resources.requests.memory | string | `"512Mi"` |  |
 | datum.service.apiPort | int | `8080` |  |
 | datum.service.stratumPort | int | `23334` |  |
-| datum.serviceAccount.create | bool | `false` |  |
-| datum.serviceAccount.name | string | `""` |  |
 | extraInitContainers | list | `[]` |  |
 | fullnameOverride | string | `"bitcoin"` |  |
 | global.network | string | `"mainnet"` |  |
@@ -100,13 +98,13 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | persistence.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` |  |
 | podLabels.app | string | `"bitcoin"` |  |
-| podSecurityContext.fsGroup | int | `2000` |  |
+| podSecurityContext.fsGroup | int | `1000` |  |
 | priorityClassName | string | `""` |  |
 | replicaCount | int | `1` |  |
 | resources | string | `nil` |  |
 | secrets.create | bool | `true` |  |
 | securityContext.readOnlyRootFilesystem | bool | `true` |  |
-| securityContext.runAsGroup | int | `3000` |  |
+| securityContext.runAsGroup | int | `1000` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1000` |  |
 | service.ports.metrics | int | `9223` |  |
