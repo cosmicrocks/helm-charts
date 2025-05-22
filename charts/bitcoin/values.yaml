@@ -7,54 +7,6 @@ global:
 secrets:
   create: true
 
-# This is being replaced by environment variables in the deployment
-# bitcoinGenericConfig:
-# ======== Core Settings ========
-# - server=1
-# - dbcrashratio=0.0001
-# - txindex=1
-# - printtoconsole=1
-# - rpcuser=rpcuser
-# Consider using cookie-based auth or rpcauth instead.
-
-# ======== ZMQ (for Electrs, etc.) ========
-# - zmqpubrawtx=tcp://0.0.0.0:8431
-# - zmqpubrawblock=tcp://0.0.0.0:8432
-# - zmqpubhashblock=tcp://0.0.0.0:8433
-
-# ======== Performance Tuning (16 GB RAM) ========
-# - dbcache=4096  # 4 GB DB cache
-# - maxconnections=80  # Reasonable upper limit
-# - rpcworkqueue=1000  # Large RPC queue
-# - maxmempool=600  # 600 MB mempool
-# - blockreconstructionextratxn=10000
-
-# ======== OCEAN Policy Compliance ========
-# - datacarrier=1  # Enable OP_RETURN (OCEAN requires)
-# - acceptnonstdtxn=0  # Default
-# - acceptnonstddatacarrier=0  # Default
-# - datacarriercost=1  # Default
-# - datacarriersize=42  # Default
-# - bytespersigop=20  # Default
-# - bytespersigopstrict=20  # Default
-# - maxscriptsize=1650  # Default
-# - mempoolfullrbf=1  # Default
-# - mempoolreplacement=fee,-optin  # Enforce full RBF (OCEAN requires)
-# - mempooltruc=accept  # Default
-# - minrelaytxfee=0.00001  # Default
-# - permitbaremultisig=0  # Default
-# - permitbarepubkey=0  # Default
-# - rejectparasites=1  # Default
-# - spkreuse=allow  # Default
-
-# ======== Mining Block Template ========
-# - blockmaxsize=3985000  # OCEAN override
-# - blockmaxweight=3985000  # OCEAN override
-# - blockmintxfee=0.00001  # Default
-# - blockprioritysize=0  # OCEAN override
-# - blocknotify=/data/.bitcoin/blocknotify.sh
-
-# New Bitcoin configuration structure using environment variables
 bitcoin:
   # Core Settings
   serverEnabled: 1
@@ -140,16 +92,13 @@ serviceAccount:
 podAnnotations: {}
 
 podSecurityContext:
-  fsGroup: 2000
+  fsGroup: 1000
 
 securityContext:
-  # capabilities:
-  #   drop:
-  #   - ALL
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
-  runAsGroup: 3000
+  runAsGroup: 1000
 
 resources:
   # limits:
@@ -208,11 +157,11 @@ datum:
     requests:
       cpu: 100m
       memory: 512Mi
-  persistence:  # Persistence for datum, if needed, might require careful volume mounting
+  persistence:
     enabled: true
     # existingClaim: ""
     storageClass: {}
-    accessMode: ReadWriteOncePod  # This might be an issue if bitcoin also uses ReadWriteOncePod for the same PV. Consider ReadWriteMany or separate PVs.
+    accessMode: ReadWriteOncePod
     size: 1Gi
   mining:
     address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
