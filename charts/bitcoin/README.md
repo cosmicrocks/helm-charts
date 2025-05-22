@@ -58,7 +58,7 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | datum.bitcoin.rpcHost | string | `"localhost:8332"` |  |
 | datum.bitcoin.rpcuser | string | `"rpcuser"` |  |
 | datum.bitcoin.secretName | string | `"bitcoin-rpcpassword"` |  |
-| datum.enabled | bool | `false` |  |
+| datum.enabled | bool | `true` |  |
 | datum.image.pullPolicy | string | `"Always"` |  |
 | datum.image.repository | string | `"ghcr.io/cosmicrocks/datum"` |  |
 | datum.image.tag | string | `"v0.3.1beta"` |  |
