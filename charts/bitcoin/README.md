@@ -114,6 +114,7 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | sidecarContainers | list | `[]` |  |
+| terminationGracePeriodSeconds | int | `10` |  |
 | tolerations | list | `[]` |  |
 
 ----------------------------------------------
