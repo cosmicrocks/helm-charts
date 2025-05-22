@@ -70,7 +70,9 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | datum.persistence.enabled | bool | `true` |  |
 | datum.persistence.size | string | `"1Gi"` |  |
 | datum.persistence.storageClass | object | `{}` |  |
-| datum.resources | string | `nil` |  |
+| datum.resources.limits.memory | string | `"512Mi"` |  |
+| datum.resources.requests.cpu | string | `"100m"` |  |
+| datum.resources.requests.memory | string | `"512Mi"` |  |
 | datum.service.apiPort | int | `8080` |  |
 | datum.service.stratumPort | int | `23334` |  |
 | datum.serviceAccount.create | bool | `false` |  |
