@@ -7,51 +7,102 @@ global:
 secrets:
   create: true
 
-bitcoinGenericConfig:
+# This is being replaced by environment variables in the deployment
+# bitcoinGenericConfig:
 # ======== Core Settings ========
-- server=1
-- dbcrashratio=0.0001
-- txindex=1
-- printtoconsole=1
-- rpcuser=rpcuser
+# - server=1
+# - dbcrashratio=0.0001
+# - txindex=1
+# - printtoconsole=1
+# - rpcuser=rpcuser
 # Consider using cookie-based auth or rpcauth instead.
 
 # ======== ZMQ (for Electrs, etc.) ========
-- zmqpubrawtx=tcp://0.0.0.0:8431
-- zmqpubrawblock=tcp://0.0.0.0:8432
-- zmqpubhashblock=tcp://0.0.0.0:8433
+# - zmqpubrawtx=tcp://0.0.0.0:8431
+# - zmqpubrawblock=tcp://0.0.0.0:8432
+# - zmqpubhashblock=tcp://0.0.0.0:8433
 
 # ======== Performance Tuning (16 GB RAM) ========
-- dbcache=4096  # 4 GB DB cache
-- maxconnections=80  # Reasonable upper limit
-- rpcworkqueue=1000  # Large RPC queue
-- maxmempool=600  # 600 MB mempool
-- blockreconstructionextratxn=10000
+# - dbcache=4096  # 4 GB DB cache
+# - maxconnections=80  # Reasonable upper limit
+# - rpcworkqueue=1000  # Large RPC queue
+# - maxmempool=600  # 600 MB mempool
+# - blockreconstructionextratxn=10000
 
 # ======== OCEAN Policy Compliance ========
-- datacarrier=1  # Enable OP_RETURN (OCEAN requires)
-- acceptnonstdtxn=0  # Default
-- acceptnonstddatacarrier=0  # Default
-- datacarriercost=1  # Default
-- datacarriersize=42  # Default
-- bytespersigop=20  # Default
-- bytespersigopstrict=20  # Default
-- maxscriptsize=1650  # Default
-- mempoolfullrbf=1  # Default
-- mempoolreplacement=fee,-optin  # Enforce full RBF (OCEAN requires)
-- mempooltruc=accept  # Default
-- minrelaytxfee=0.00001  # Default
-- permitbaremultisig=0  # Default
-- permitbarepubkey=0  # Default
-- rejectparasites=1  # Default
-- spkreuse=allow  # Default
+# - datacarrier=1  # Enable OP_RETURN (OCEAN requires)
+# - acceptnonstdtxn=0  # Default
+# - acceptnonstddatacarrier=0  # Default
+# - datacarriercost=1  # Default
+# - datacarriersize=42  # Default
+# - bytespersigop=20  # Default
+# - bytespersigopstrict=20  # Default
+# - maxscriptsize=1650  # Default
+# - mempoolfullrbf=1  # Default
+# - mempoolreplacement=fee,-optin  # Enforce full RBF (OCEAN requires)
+# - mempooltruc=accept  # Default
+# - minrelaytxfee=0.00001  # Default
+# - permitbaremultisig=0  # Default
+# - permitbarepubkey=0  # Default
+# - rejectparasites=1  # Default
+# - spkreuse=allow  # Default
 
 # ======== Mining Block Template ========
-- blockmaxsize=3985000  # OCEAN override
-- blockmaxweight=3985000  # OCEAN override
-- blockmintxfee=0.00001  # Default
-- blockprioritysize=0  # OCEAN override
-- blocknotify=/data/.bitcoin/blocknotify.sh
+# - blockmaxsize=3985000  # OCEAN override
+# - blockmaxweight=3985000  # OCEAN override
+# - blockmintxfee=0.00001  # Default
+# - blockprioritysize=0  # OCEAN override
+# - blocknotify=/data/.bitcoin/blocknotify.sh
+
+# New Bitcoin configuration structure using environment variables
+bitcoin:
+  # Core Settings
+  serverEnabled: 1
+  dbCrashRatio: 0.0001
+  txindexEnabled: 1
+  printtoconsoleEnabled: 1
+  rpcUser: rpcuser
+  rpcBind: "0.0.0.0"
+  rpcAllowIP: "0.0.0.0/0"
+
+  # ZMQ Settings
+  zmqPubRawTx: "tcp://0.0.0.0:8431"
+  zmqPubRawBlock: "tcp://0.0.0.0:8432"
+  zmqPubHashBlock: "tcp://0.0.0.0:8433"
+
+  # Performance Tuning (adjust based on available resources)
+  dbCache: 4096  # 4 GB DB cache
+  maxConnections: 80  # Reasonable upper limit
+  rpcWorkQueue: 1000  # Large RPC queue
+  maxMempool: 600  # 600 MB mempool
+  blockReconstructionExtraTxn: 10000
+
+  # OCEAN Policy Compliance
+  dataCarrierSize: 1  # Enable OP_RETURN (OCEAN requires)
+  acceptNonStdTxn: 0  # Default
+  acceptNonStdDataCarrier: 0  # Default
+  dataCarrierCost: 1  # Default
+  dataCarrierSizeLimit: 42  # Default
+  bytesPerSigop: 20  # Default
+  bytesPerSigopStrict: 20  # Default
+  maxScriptSize: 1650  # Default
+  mempoolFullRbf: 1  # Default
+  mempoolReplacement: "fee,-optin"  # Enforce full RBF (OCEAN requires)
+  minRelayTxFee: 0.00001  # Default
+  permitBareMultisig: 0  # Default
+  permitBarePubkey: 0  # Default
+  rejectParasites: 1  # Default
+  spkReuse: "allow"  # Default
+
+  # Mining Block Template
+  blockMaxSize: 3985000  # OCEAN override
+  blockMaxWeight: 3985000  # OCEAN override
+  blockMinTxFee: 0.00001  # Default
+  blockPrioritySize: 0  # OCEAN override
+
+  # Reindex flags
+  reindex: 0  # Set to 1 to reindex blocks
+  reindexChainstate: 0  # Set to 1 to reindex chainstate (only utxo set, not txindex)
 
 replicaCount: 1
 
