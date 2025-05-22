@@ -135,7 +135,7 @@ service:
     metrics: 9223
 
 datum:
-  enabled: false  # Set to true to enable the datum sidecar
+  enabled: true  # Set to true to enable the datum sidecar
   image:
     repository: ghcr.io/cosmicrocks/datum
     pullPolicy: Always
