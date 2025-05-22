@@ -3,6 +3,27 @@ entries:
   bitcoin:
   - apiVersion: v2
     appVersion: knots20250305
+    created: "2025-05-22T23:29:55.543931024Z"
+    description: A Helm chart for Bitcoin knots, a Bitcoin full node implementation
+      with spam prevention.
+    digest: 422d19667dd3f7dc76f515e9a7330f9ee26cd22435957db37f7d86b578308e3c
+    home: https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin
+    icon: https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/bitcoin/icon.png
+    keywords:
+    - bitcoin
+    - knots
+    maintainers:
+    - email: itamar@cosmic.rocks
+      name: esomore
+    name: bitcoin
+    sources:
+    - https://github.com/cosmic.rocks/bitcoin
+    type: application
+    urls:
+    - https://github.com/cosmicrocks/helm-charts/releases/download/bitcoin-1.0.6/bitcoin-1.0.6.tgz
+    version: 1.0.6
+  - apiVersion: v2
+    appVersion: knots20250305
     created: "2025-05-22T21:04:58.237060041Z"
     description: A Helm chart for Bitcoin knots, a Bitcoin full node implementation
       with spam prevention.
@@ -135,4 +156,4 @@ entries:
     urls:
     - https://github.com/cosmicrocks/helm-charts/releases/download/datum-1.0.0/datum-1.0.0.tgz
     version: 1.0.0
-generated: "2025-05-22T21:04:58.237083175Z"
+generated: "2025-05-22T23:29:55.543968493Z"
