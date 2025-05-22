@@ -220,10 +220,3 @@ datum:
     requests:
       cpu: 100m
       memory: 512Mi
-
-  persistence:
-    enabled: true
-    # existingClaim: ""
-    storageClass: {}
-    accessMode: ReadWriteOncePod
-    size: 1Gi

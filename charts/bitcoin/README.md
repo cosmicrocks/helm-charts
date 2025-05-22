@@ -84,10 +84,6 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | datum.mining.coinbaseUniqueId | int | `32359` |  |
 | datum.mining.poolHost | string | `"datum-beta1.mine.ocean.xyz"` |  |
 | datum.mining.saveSubmitblocksDir | string | `""` |  |
-| datum.persistence.accessMode | string | `"ReadWriteOncePod"` |  |
-| datum.persistence.enabled | bool | `true` |  |
-| datum.persistence.size | string | `"1Gi"` |  |
-| datum.persistence.storageClass | object | `{}` |  |
 | datum.podSecurityContext.fsGroup | int | `1000` |  |
 | datum.pool.alwaysPaySelf | bool | `true` |  |
 | datum.pool.passFullUsers | bool | `true` |  |
