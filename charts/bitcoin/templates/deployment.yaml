@@ -45,10 +45,14 @@ spec:
       {{- end }}
         - name: copy-bitcoin-config
           image: busybox
+          securityContext:
+            runAsUser: 0
+            privileged: true
           command:
           - 'sh'
           - '-c'
           - |
+            mkdir -p /data/.bitcoin/scripts
             cat <<EOF > /data/.bitcoin/bitcoin.conf
             rpcpassword=$(cat /rpcpassword/password)
             blocknotify=/data/.bitcoin/scripts/blocknotify.sh
@@ -61,10 +65,8 @@ spec:
               mountPath: /configmap
             - name: rpcpassword
               mountPath: /rpcpassword
-            - name: config
-              mountPath: /data/.bitcoin/
-            - name: scripts
-              mountPath: /data/.bitcoin/scripts/
+            - name: data
+              mountPath: /data
       containers:
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 8 }}
@@ -113,12 +115,7 @@ spec:
               containerPort: {{ .Values.service.ports.zmqpubrawblock }}
           volumeMounts:
             - name: data
-              mountPath: /data/.bitcoin
-            - name: config
-              mountPath: /data/.bitcoin/bitcoin.conf
-              subPath: bitcoin.conf
-            - name: scripts
-              mountPath: /data/.bitcoin/scripts
+              mountPath: /data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: exporter
@@ -176,10 +173,6 @@ spec:
             {{- toYaml .Values.datum.resources | nindent 12 }}
       {{- end }}
       volumes:
-        - name: config
-          emptyDir: {}
-        - name: scripts
-          emptyDir: {}
         - name: rpcpassword
           secret:
             secretName: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
