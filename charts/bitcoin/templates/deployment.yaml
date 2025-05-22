@@ -185,7 +185,7 @@ spec:
       {{- if .Values.datum.enabled }}
         - name: datum
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.datum.podSecurityContext | nindent 12 }}
           image: "{{ .Values.datum.image.repository }}:{{ .Values.datum.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.datum.image.pullPolicy }}
           env:
