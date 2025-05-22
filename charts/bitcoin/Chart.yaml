@@ -1,14 +1,14 @@
 apiVersion: v2
 name: bitcoin
-description: A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam prevention.
+description: A Helm chart for Bitcoin knots with datum for decentralized mining by the OCEAN protocol.
 keywords:
   - bitcoin
   - knots
 type: application
-version: 1.0.6
+version: 1.0.7
 home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin"
 sources:
-  - "https://github.com/cosmic.rocks/bitcoin"
+  - "https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin"
 icon: "https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/bitcoin/icon.png"
 appVersion: "knots20250305"
 maintainers:
