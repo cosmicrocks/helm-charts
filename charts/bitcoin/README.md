@@ -88,6 +88,7 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | datum.persistence.enabled | bool | `true` |  |
 | datum.persistence.size | string | `"1Gi"` |  |
 | datum.persistence.storageClass | object | `{}` |  |
+| datum.podSecurityContext.fsGroup | int | `1000` |  |
 | datum.pool.alwaysPaySelf | bool | `true` |  |
 | datum.pool.passFullUsers | bool | `true` |  |
 | datum.pool.passWorkers | bool | `true` |  |

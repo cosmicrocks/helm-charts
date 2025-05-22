@@ -145,6 +145,10 @@ datum:
     repository: ghcr.io/cosmicrocks/datum
     pullPolicy: Always
     tag: "v0.3.1beta"
+
+  podSecurityContext:
+    fsGroup: 1000
+
   service:
     stratumPort: 23334  # Stratum protocol port
     apiPort: 8080      # API port
