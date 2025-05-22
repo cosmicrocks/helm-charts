@@ -7,50 +7,56 @@ global:
 secrets:
   create: true
 
-bitcoinGenericConfig:
-# ======== Core Settings ========
-- server=1
-- dbcrashratio=0.0001
-- txindex=1
-- printtoconsole=1
-- rpcuser=rpcuser
-# Consider using cookie-based auth or rpcauth instead.
+bitcoin:
+  # Core Settings
+  serverEnabled: 1
+  dbCrashRatio: 0.0001
+  txindexEnabled: 1
+  printtoconsoleEnabled: 1
+  rpcUser: rpcuser
+  rpcBind: "0.0.0.0"
+  rpcAllowIP: "0.0.0.0/0"
 
-# ======== ZMQ (for Electrs, etc.) ========
-- zmqpubrawtx=tcp://0.0.0.0:8431
-- zmqpubrawblock=tcp://0.0.0.0:8432
-- zmqpubhashblock=tcp://0.0.0.0:8433
+  # ZMQ Settings
+  zmqPubRawTx: "tcp://0.0.0.0:8431"
+  zmqPubRawBlock: "tcp://0.0.0.0:8432"
+  zmqPubHashBlock: "tcp://0.0.0.0:8433"
 
-# ======== Performance Tuning (16 GB RAM) ========
-- dbcache=4096  # 4 GB DB cache
-- maxconnections=80  # Reasonable upper limit
-- rpcworkqueue=1000  # Large RPC queue
-- maxmempool=600  # 600 MB mempool
-- blockreconstructionextratxn=10000
+  # Performance Tuning (adjust based on available resources)
+  dbCache: 4096  # 4 GB DB cache
+  maxConnections: 80  # Reasonable upper limit
+  rpcWorkQueue: 1000  # Large RPC queue
+  maxMempool: 600  # 600 MB mempool
+  blockReconstructionExtraTxn: 10000
 
-# ======== OCEAN Policy Compliance ========
-- datacarrier=1  # Enable OP_RETURN (OCEAN requires)
-- acceptnonstdtxn=0  # Default
-- acceptnonstddatacarrier=0  # Default
-- datacarriercost=1  # Default
-- datacarriersize=42  # Default
-- bytespersigop=20  # Default
-- bytespersigopstrict=20  # Default
-- maxscriptsize=1650  # Default
-- mempoolfullrbf=1  # Default
-- mempoolreplacement=fee,-optin  # Enforce full RBF (OCEAN requires)
-- mempooltruc=accept  # Default
-- minrelaytxfee=0.00001  # Default
-- permitbaremultisig=0  # Default
-- permitbarepubkey=0  # Default
-- rejectparasites=1  # Default
-- spkreuse=allow  # Default
+  # OCEAN Policy Compliance
+  dataCarrierSize: 1  # Enable OP_RETURN (OCEAN requires)
+  acceptNonStdTxn: 0  # Default
+  acceptNonStdDataCarrier: 0  # Default
+  dataCarrierCost: 1  # Default
+  dataCarrierSizeLimit: 42  # Default
+  bytesPerSigop: 20  # Default
+  bytesPerSigopStrict: 20  # Default
+  maxScriptSize: 1650  # Default
+  mempoolFullRbf: 1  # Default
+  mempoolReplacement: "fee,-optin"  # Enforce full RBF (OCEAN requires)
+  minRelayTxFee: 0.00001  # Default
+  permitBareMultisig: 0  # Default
+  permitBarePubkey: 0  # Default
+  rejectParasites: 1  # Default
+  spkReuse: "allow"  # Default
 
-# ======== Mining Block Template ========
-- blockmaxsize=3985000  # OCEAN override
-- blockmaxweight=3985000  # OCEAN override
-- blockmintxfee=0.00001  # Default
-- blockprioritysize=0  # OCEAN override
+  # Mining Block Template
+  datumHost: 127.0.0.1
+  datumPort: 8080
+  blockMaxSize: 3985000  # OCEAN override
+  blockMaxWeight: 3985000  # OCEAN override
+  blockMinTxFee: 0.00001  # Default
+  blockPrioritySize: 0  # OCEAN override
+
+  # Reindex flags
+  reindex: 0  # Set to 1 to reindex blocks
+  reindexChainstate: 0  # Set to 1 to reindex chainstate (only utxo set, not txindex)
 
 replicaCount: 1
 
@@ -88,16 +94,13 @@ serviceAccount:
 podAnnotations: {}
 
 podSecurityContext:
-  fsGroup: 2000
+  fsGroup: 1000
 
 securityContext:
-  # capabilities:
-  #   drop:
-  #   - ALL
   readOnlyRootFilesystem: true
   runAsNonRoot: true
   runAsUser: 1000
-  runAsGroup: 3000
+  runAsGroup: 1000
 
 resources:
   # limits:
@@ -142,32 +145,81 @@ datum:
     repository: ghcr.io/cosmicrocks/datum
     pullPolicy: Always
     tag: "v0.3.1beta"
-  serviceAccount:  # Note: Sidecars generally don't need separate service accounts if they operate under the main pod's SA
-    create: false  # Typically false for a sidecar
-    name: ""
-  # Pod security context for datum sidecar (if different from main container)
-  # securityContext: {}
-  service:  # Ports exposed by datum
-    stratumPort: 23334
-    apiPort: 8080
+  service:
+    stratumPort: 23334  # Stratum protocol port
+    apiPort: 8080      # API port
+
+  # Bitcoin RPC connection configuration
+  bitcoin:
+    rpcHost: "localhost:8332"  # Bitcoin RPC host within the pod
+    rpcuser: "rpcuser"         # Bitcoin RPC username
+
+  # Bitcoin daemon-specific settings
+  bitcoind:
+    workUpdateSeconds: 40      # How often to update mining work
+    notifyFallback: true       # Use fallback notification mechanism
+
+  # Stratum server configuration
+  stratum:
+    maxClientsPerThread: 128    # Maximum clients per thread
+    maxThreads: 8               # Maximum number of threads
+    maxClients: 1024            # Maximum number of clients
+    vardiffMin: 16384           # Minimum variable difficulty
+    vardiffTargetSharesMin: 8   # Target shares minimum for vardiff
+    vardiffQuickdiffCount: 8    # Quickdiff count
+    vardiffQuickdiffDelta: 8    # Quickdiff delta
+    shareStaleSeconds: 120      # Seconds after which shares are considered stale
+    fingerprintMiners: true     # Enable miner fingerprinting
+    idleTimeoutNoSubscribe: 15  # Idle timeout for connections without subscribe
+    idleTimeoutNoShares: 7200   # Idle timeout for connections without shares
+    idleTimeoutMaxLastWork: 0   # Maximum time since last work (0 = disabled)
+
+  # Mining configuration
+  mining:
+    address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"  # Mining reward address
+    coinbaseTagPrimary: "DATUM Gateway"                   # Primary coinbase tag
+    coinbaseTagSecondary: "Cosmic Rocks"                  # Secondary coinbase tag
+    coinbaseUniqueId: 32359                               # Unique ID for coinbase
+    saveSubmitblocksDir: ""                               # Directory to save submitted blocks (empty = disabled)
+    poolHost: "datum-beta1.mine.ocean.xyz"                # Pool host for mining (empty for solo mining)
+
+  # API configuration
+  api:
+    adminPassword: "admin"                                # Admin password for API
+    extraBlockSubmissionsUrls: "[]"                       # Extra URLs to submit blocks to (JSON array as string)
+
+  # Logging configuration
+  logger:
+    logToConsole: true                                    # Log to console
+    logToStderr: false                                    # Log to stderr
+    logToFile: false                                      # Log to file
+    logFile: ""                                           # Log file path (empty = disabled)
+    logRotateDaily: true                                  # Rotate logs daily
+    logCallingFunction: true                              # Log calling functions
+    logLevelConsole: 2                                    # Console log level
+    logLevelFile: 1                                       # File log level
+
+  # Pool settings
+  pool:
+    port: 28915                                           # Pool port
+    pubkey: "f21f2f0ef0aa1970468f22bad9bb7f4535146f8e4a8f646bebc93da3d89b1406f40d032f09a417d94dc068055df654937922d2c89522e3e8f6f0e649de473003"  # Pool public key
+    passWorkers: true                                     # Pass worker information
+    passFullUsers: true                                   # Pass full user information
+    alwaysPaySelf: true                                   # Always pay self
+    pooledMiningOnly: false                               # Pooled mining only
+    protocolGlobalTimeout: 60                             # Protocol global timeout
+
+  # Resources for the Datum container
   resources:
     limits:
       memory: 512Mi
     requests:
       cpu: 100m
       memory: 512Mi
-  persistence:  # Persistence for datum, if needed, might require careful volume mounting
+
+  persistence:
     enabled: true
     # existingClaim: ""
     storageClass: {}
-    accessMode: ReadWriteOncePod  # This might be an issue if bitcoin also uses ReadWriteOncePod for the same PV. Consider ReadWriteMany or separate PVs.
+    accessMode: ReadWriteOncePod
     size: 1Gi
-  mining:
-    address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
-    coinbaseTagPrimary: "DATUM Gateway"
-    coinbaseTagSecondary: "Cosmic Rocks"
-    poolHost: "datum-beta1.mine.ocean.xyz"  # set to "" for solo mining
-  bitcoin:  # Configuration for datum to connect to the bitcoin node
-    rpcHost: "localhost:8332"  # Assuming bitcoin RPC is available on localhost within the pod
-    rpcuser: "rpcuser"  # Should ideally use the same rpcuser as the main bitcoin container
-    secretName: "bitcoin-rpcpassword"  # Should use the same secret

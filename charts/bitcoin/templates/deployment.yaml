@@ -1,4 +1,3 @@
-{{ $checksum := include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,7 +21,6 @@ spec:
     {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
-        checksum/config: {{ $checksum }}
     {{- end }}
       labels:
         {{- include "bitcoin.selectorLabels" . | nindent 8 }}
@@ -43,30 +41,6 @@ spec:
       {{- if .Values.extraInitContainers }}
       {{- toYaml .Values.extraInitContainers | nindent 8 }}
       {{- end }}
-        - name: copy-bitcoin-config
-          image: busybox
-          securityContext:
-            runAsUser: 0
-            privileged: true
-          command:
-          - 'sh'
-          - '-c'
-          - |
-            mkdir -p /data/.bitcoin/scripts
-            cat <<EOF > /data/.bitcoin/bitcoin.conf
-            rpcpassword=$(cat /rpcpassword/password)
-            blocknotify=/data/.bitcoin/scripts/blocknotify.sh
-            $(cat /configmap/bitcoin.conf)
-            EOF
-            cp /configmap/blocknotify.sh /data/.bitcoin/scripts/blocknotify.sh
-            chmod +x /data/.bitcoin/scripts/blocknotify.sh
-          volumeMounts:
-            - name: configmap
-              mountPath: /configmap
-            - name: rpcpassword
-              mountPath: /rpcpassword
-            - name: data
-              mountPath: /data
       containers:
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 8 }}
@@ -75,35 +49,105 @@ spec:
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          command: ["/usr/local/bin/bitcoind"]
           lifecycle:
             preStop:
               exec:
                 command: ["/bin/sh", "-c", "bitcoin-cli stop"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
+            # Core Settings
+            - name: SERVER_ENABLED
+              value: {{ .Values.bitcoin.serverEnabled | default 1 | toString | quote }}
+            - name: TXINDEX_ENABLED
+              value: {{ .Values.bitcoin.txindexEnabled | default 1 | toString | quote }}
+            - name: PRINTTOCONSOLE_ENABLED
+              value: {{ .Values.bitcoin.printtoconsoleEnabled | default 1 | toString | quote }}
             - name: RPC_USER
-              value: rpcuser
+              value: {{ .Values.bitcoin.rpcUser | default "rpcuser" | quote }}
             - name: RPC_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
                   key: password
-            - name: REINDEX
-              value: "0" # 1 to reindex blocks
-            - name: REINDEX_CHAINSTATE
-              value: "0" # 1 to reindex chainstate (only utxo set, not txindex)
-            # Performance Tuning for 1cpu 1GB RAM
+            - name: RPC_BIND
+              value: {{ .Values.bitcoin.rpcBind | default "0.0.0.0" | quote }}
+            - name: RPC_PORT
+              value: {{ .Values.global.service.ports.rpc | default 8332 | toString | quote }}
+            - name: RPC_ALLOW_IP
+              value: {{ .Values.bitcoin.rpcAllowIP | default "0.0.0.0/0" | quote }}
+
+            # ZMQ Settings
+            - name: ZMQ_PUB_RAW_TX
+              value: {{ .Values.bitcoin.zmqPubRawTx | default "tcp://0.0.0.0:8431" | quote }}
+            - name: ZMQ_PUB_RAW_BLOCK
+              value: {{ .Values.bitcoin.zmqPubRawBlock | default "tcp://0.0.0.0:8432" | quote }}
+            - name: ZMQ_PUB_HASH_BLOCK
+              value: {{ .Values.bitcoin.zmqPubHashBlock | default "tcp://0.0.0.0:8433" | quote }}
+
+            # Performance Tuning
             - name: DB_CACHE
-              value: {{ .Values.dbCache | default "100" | quote }}
+              value: {{ .Values.bitcoin.dbCache | default 100 | toString | quote }}
             - name: MAX_CONNECTIONS
-              value: {{ .Values.maxConnections | default "20" | quote }}
+              value: {{ .Values.bitcoin.maxConnections | default 20 | toString | quote }}
             - name: RPC_WORK_QUEUE
-              value: {{ .Values.rpcWorkQueue | default "8" | quote }}
+              value: {{ .Values.bitcoin.rpcWorkQueue | default 8 | toString | quote }}
             - name: MAX_MEMPOOL
-              value: {{ .Values.maxMempool | default "50" | quote }}
+              value: {{ .Values.bitcoin.maxMempool | default 50 | toString | quote }}
             - name: BLOCK_RECONSTRUCTION_EXTRA_TXN
-              value: {{ .Values.blockReconstructionExtraTxn | default "5000" | quote }}
+              value: {{ .Values.bitcoin.blockReconstructionExtraTxn | default 5000 | toString | quote }}
+
+            # OCEAN Policy Compliance
+            - name: DATA_CARRIER_SIZE
+              value: {{ .Values.bitcoin.dataCarrierSize | default 1 | toString | quote }}
+            - name: ACCEPT_NON_STD_TXN
+              value: {{ .Values.bitcoin.acceptNonStdTxn | default 0 | toString | quote }}
+            - name: ACCEPT_NON_STD_DATA_CARRIER
+              value: {{ .Values.bitcoin.acceptNonStdDataCarrier | default 0 | toString | quote }}
+            - name: DATA_CARRIER_COST
+              value: {{ .Values.bitcoin.dataCarrierCost | default 1 | toString | quote }}
+            - name: DATACARRIERSIZE_LIMIT
+              value: {{ .Values.bitcoin.dataCarrierSizeLimit | default 42 | toString | quote }}
+            - name: BYTES_PER_SIGOP
+              value: {{ .Values.bitcoin.bytesPerSigop | default 20 | toString | quote }}
+            - name: BYTES_PER_SIGOP_STRICT
+              value: {{ .Values.bitcoin.bytesPerSigopStrict | default 20 | toString | quote }}
+            - name: MAX_SCRIPT_SIZE
+              value: {{ .Values.bitcoin.maxScriptSize | default 1650 | toString | quote }}
+            - name: MEMPOOL_FULL_RBF
+              value: {{ .Values.bitcoin.mempoolFullRbf | default 1 | toString | quote }}
+            - name: MEMPOOL_REPLACEMENT
+              value: {{ .Values.bitcoin.mempoolReplacement | default "fee,-optin" | quote }}
+            - name: MIN_RELAY_TX_FEE
+              value: {{ printf "%.5f" (float64 (default 0.00001 .Values.bitcoin.minRelayTxFee)) | quote }}
+            - name: PERMIT_BARE_MULTISIG
+              value: {{ .Values.bitcoin.permitBareMultisig | default 0 | toString | quote }}
+            - name: PERMIT_BARE_PUBKEY
+              value: {{ .Values.bitcoin.permitBarePubkey | default 0 | toString | quote }}
+            - name: REJECT_PARASITES
+              value: {{ .Values.bitcoin.rejectParasites | default 1 | toString | quote }}
+            - name: SPK_REUSE
+              value: {{ .Values.bitcoin.spkReuse | default "allow" | quote }}
+
+            # Mining Block Template
+            - name: BLOCK_MAX_SIZE
+              value: {{ printf "%.0f" (float64 (default 3985000 .Values.bitcoin.blockMaxSize)) | quote }}
+            - name: BLOCK_MAX_WEIGHT
+              value: {{ printf "%.0f" (float64 (default 3985000 .Values.bitcoin.blockMaxWeight)) | quote }}
+            - name: BLOCK_MIN_TX_FEE
+              value: {{ printf "%.5f" (float64 (default 0.00001 .Values.bitcoin.blockMinTxFee)) | quote }}
+            - name: BLOCK_PRIORITY_SIZE
+              value: {{ .Values.bitcoin.blockPrioritySize | default 0 | toString | quote }}
+            - name: DATUM_HOST
+              value: {{ .Values.bitcoin.datumHost | default "127.0.0.1" | quote }}
+            - name: DATUM_PORT
+              value: {{ .Values.bitcoin.datumPort | default 8080 | toString | quote }}
+
+            # Reindex flags
+            - name: REINDEX
+              value: {{ .Values.bitcoin.reindex | default 0 | toString | quote }}
+            - name: REINDEX_CHAINSTATE
+              value: {{ .Values.bitcoin.reindexChainstate | default 0 | toString | quote }}
+
           ports:
             - name: rpc
               containerPort: {{ .Values.global.service.ports.rpc }}
@@ -132,9 +176,9 @@ spec:
                 name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
                 key: password
           - name: METRICS_PORT
-            value: {{ .Values.service.ports.metrics | quote }}
+            value: {{ .Values.service.ports.metrics | toString | quote }}
           - name: BITCOIN_RPC_PORT
-            value: {{ .Values.global.service.ports.rpc | quote }}
+            value: {{ .Values.global.service.ports.rpc | toString | quote }}
           ports:
           - name: metrics
             containerPort: {{ .Values.service.ports.metrics }}
@@ -145,40 +189,116 @@ spec:
           image: "{{ .Values.datum.image.repository }}:{{ .Values.datum.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.datum.image.pullPolicy }}
           env:
+            # Bitcoin RPC Connection
             - name: DATUM_RPCURL
               value: "http://{{ .Values.datum.bitcoin.rpcHost }}"
             - name: DATUM_RPCUSER
-              value: "{{ .Values.datum.bitcoin.rpcuser }}"
+              value: {{ .Values.datum.bitcoin.rpcuser | quote }}
             - name: DATUM_RPCPASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
                   key: password
+            - name: DATUM_WORK_UPDATE_SECONDS
+              value: {{ .Values.datum.bitcoind.workUpdateSeconds | default 40 | toString | quote }}
+            - name: DATUM_NOTIFY_FALLBACK
+              value: {{ .Values.datum.bitcoind.notifyFallback | default true | toString | quote }}
+
+            # Stratum Server Config
+            - name: DATUM_LISTEN_PORT
+              value: {{ .Values.datum.service.stratumPort | default 23334 | toString | quote }}
+            - name: DATUM_MAX_CLIENTS_PER_THREAD
+              value: {{ .Values.datum.stratum.maxClientsPerThread | default 128 | toString | quote }}
+            - name: DATUM_MAX_THREADS
+              value: {{ .Values.datum.stratum.maxThreads | default 8 | toString | quote }}
+            - name: DATUM_MAX_CLIENTS
+              value: {{ .Values.datum.stratum.maxClients | default 1024 | toString | quote }}
+            - name: DATUM_VARDIFF_MIN
+              value: {{ .Values.datum.stratum.vardiffMin | default 16384 | toString | quote }}
+            - name: DATUM_VARDIFF_TARGET_SHARES_MIN
+              value: {{ .Values.datum.stratum.vardiffTargetSharesMin | default 8 | toString | quote }}
+            - name: DATUM_VARDIFF_QUICKDIFF_COUNT
+              value: {{ .Values.datum.stratum.vardiffQuickdiffCount | default 8 | toString | quote }}
+            - name: DATUM_VARDIFF_QUICKDIFF_DELTA
+              value: {{ .Values.datum.stratum.vardiffQuickdiffDelta | default 8 | toString | quote }}
+            - name: DATUM_SHARE_STALE_SECONDS
+              value: {{ .Values.datum.stratum.shareStaleSeconds | default 120 | toString | quote }}
+            - name: DATUM_FINGERPRINT_MINERS
+              value: {{ .Values.datum.stratum.fingerprintMiners | default true | toString | quote }}
+            - name: DATUM_IDLE_TIMEOUT_NO_SUBSCRIBE
+              value: {{ .Values.datum.stratum.idleTimeoutNoSubscribe | default 15 | toString | quote }}
+            - name: DATUM_IDLE_TIMEOUT_NO_SHARES
+              value: {{ .Values.datum.stratum.idleTimeoutNoShares | default 7200 | toString | quote }}
+            - name: DATUM_IDLE_TIMEOUT_MAX_LAST_WORK
+              value: {{ .Values.datum.stratum.idleTimeoutMaxLastWork | default 0 | toString | quote }}
+
+            # Mining Configuration
             - name: DATUM_POOL_ADDRESS
-              value: "{{ .Values.datum.mining.address }}"
+              value: {{ .Values.datum.mining.address | quote }}
             - name: DATUM_COINBASE_TAG_PRIMARY
-              value: "{{ .Values.datum.mining.coinbaseTagPrimary }}"
+              value: {{ .Values.datum.mining.coinbaseTagPrimary | quote }}
             - name: DATUM_COINBASE_TAG_SECONDARY
-              value: "{{ .Values.datum.mining.coinbaseTagSecondary }}"
+              value: {{ .Values.datum.mining.coinbaseTagSecondary | quote }}
+            - name: DATUM_COINBASE_UNIQUE_ID
+              value: {{ .Values.datum.mining.coinbaseUniqueId | default 32359 | toString | quote }}
+            - name: DATUM_SAVE_SUBMITBLOCKS_DIR
+              value: {{ .Values.datum.mining.saveSubmitblocksDir | default "" | quote }}
+
+            # API Configuration
+            - name: DATUM_API_LISTEN_PORT
+              value: {{ .Values.datum.service.apiPort | default 8080 | toString | quote }}
+            - name: DATUM_API_ADMIN_PASSWORD
+              value: {{ .Values.datum.api.adminPassword | default "admin" | quote }}
+            - name: DATUM_EXTRA_BLOCK_SUBMISSIONS_URLS
+              value: {{ .Values.datum.api.extraBlockSubmissionsUrls | default "[]" | quote }}
+
+            # Logging Configuration
+            - name: DATUM_LOG_TO_CONSOLE
+              value: {{ .Values.datum.logger.logToConsole | default true | toString | quote }}
+            - name: DATUM_LOG_TO_STDERR
+              value: {{ .Values.datum.logger.logToStderr | default false | toString | quote }}
+            - name: DATUM_LOG_TO_FILE
+              value: {{ .Values.datum.logger.logToFile | default false | toString | quote }}
+            - name: DATUM_LOG_FILE
+              value: {{ .Values.datum.logger.logFile | default "" | quote }}
+            - name: DATUM_LOG_ROTATE_DAILY
+              value: {{ .Values.datum.logger.logRotateDaily | default true | toString | quote }}
+            - name: DATUM_LOG_CALLING_FUNCTION
+              value: {{ .Values.datum.logger.logCallingFunction | default true | toString | quote }}
+            - name: DATUM_LOG_LEVEL_CONSOLE
+              value: {{ .Values.datum.logger.logLevelConsole | default 2 | toString | quote }}
+            - name: DATUM_LOG_LEVEL_FILE
+              value: {{ .Values.datum.logger.logLevelFile | default 1 | toString | quote }}
+
+            # Datum Pool Settings
             - name: DATUM_POOL_HOST
-              value: "{{ .Values.datum.mining.poolHost }}"
+              value: {{ .Values.datum.mining.poolHost | quote }}
+            - name: DATUM_POOL_PORT
+              value: {{ .Values.datum.pool.port | default 28915 | toString | quote }}
+            - name: DATUM_POOL_PUBKEY
+              value: {{ .Values.datum.pool.pubkey | default "f21f2f0ef0aa1970468f22bad9bb7f4535146f8e4a8f646bebc93da3d89b1406f40d032f09a417d94dc068055df654937922d2c89522e3e8f6f0e649de473003" | quote }}
+            - name: DATUM_POOL_PASS_WORKERS
+              value: {{ .Values.datum.pool.passWorkers | default true | toString | quote }}
+            - name: DATUM_POOL_PASS_FULL_USERS
+              value: {{ .Values.datum.pool.passFullUsers | default true | toString | quote }}
+            - name: DATUM_ALWAYS_PAY_SELF
+              value: {{ .Values.datum.pool.alwaysPaySelf | default true | toString | quote }}
+            - name: DATUM_POOLED_MINING_ONLY
+              value: {{ .Values.datum.pool.pooledMiningOnly | default false | toString | quote }}
+            - name: DATUM_PROTOCOL_GLOBAL_TIMEOUT
+              value: {{ .Values.datum.pool.protocolGlobalTimeout | default 60 | toString | quote }}
+
           ports:
             - name: stratum
-              containerPort: 23334
+              containerPort: {{ .Values.datum.service.stratumPort | default 23334 }}
               protocol: TCP
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.datum.service.apiPort | default 8080 }}
               protocol: TCP
           resources:
             {{- toYaml .Values.datum.resources | nindent 12 }}
       {{- end }}
       volumes:
-        - name: rpcpassword
-          secret:
-            secretName: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
-        - name: configmap
-          configMap:
-            name: {{ template "bitcoin.fullname" . }}
         - name: data
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
