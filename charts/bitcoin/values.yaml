@@ -138,6 +138,8 @@ service:
     zmqpubhashblock: 8433
     p2p: 8333
     metrics: 9223
+    datum: 8080
+    stratum: 23334
 
 datum:
   enabled: true

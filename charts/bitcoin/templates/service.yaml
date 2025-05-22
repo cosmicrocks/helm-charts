@@ -21,5 +21,9 @@ spec:
       port: {{ .Values.service.ports.zmqpubrawblock }}
     - name: zmqpubhashblock
       port: {{ .Values.service.ports.zmqpubhashblock }}
+    - name: datum
+      port: {{ .Values.service.ports.datum }}
+    - name: stratum
+      port: {{ .Values.service.ports.stratum }}
   selector:
     {{- include "bitcoin.selectorLabels" . | nindent 4 }}

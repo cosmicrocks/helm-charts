@@ -1,6 +1,6 @@
 # bitcoin
 
-![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
+![Version: 1.0.6](https://img.shields.io/badge/Version-1.0.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
 
 A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam prevention.
 
@@ -138,8 +138,10 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | securityContext.runAsGroup | int | `1000` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1000` |  |
+| service.ports.datum | int | `8080` |  |
 | service.ports.metrics | int | `9223` |  |
 | service.ports.p2p | int | `8333` |  |
+| service.ports.stratum | int | `23334` |  |
 | service.ports.zmqpubhashblock | int | `8433` |  |
 | service.ports.zmqpubrawblock | int | `8432` |  |
 | service.ports.zmqpubrawtx | int | `8431` |  |
