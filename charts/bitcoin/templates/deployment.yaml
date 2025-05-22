@@ -31,7 +31,7 @@ spec:
         {{- end }}
     spec:
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
-      priorityClassName: {{ .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName | default "" }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -142,46 +142,46 @@ spec:
           - name: metrics
             containerPort: {{ .Values.service.ports.metrics }}
       {{- if .Values.datum.enabled }}
-          - name: datum
-            securityContext:
-              {{- toYaml .Values.securityContext | nindent 12 }}
-            image: "{{ .Values.datum.image.repository }}:{{ .Values.datum.image.tag | default .Chart.AppVersion }}"
-            imagePullPolicy: {{ .Values.datum.image.pullPolicy }}
-            env:
-              - name: DATUM_RPCURL
-                value: "http://{{ .Values.datum.bitcoin.rpcHost }}"
-              - name: DATUM_RPCUSER
-                value: "{{ .Values.datum.bitcoin.rpcuser }}"
-              - name: DATUM_RPCPASSWORD
-                valueFrom:
-                  secretKeyRef:
-                    name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
-                    key: password
-              - name: DATUM_POOL_ADDRESS
-                value: "{{ .Values.datum.mining.address }}"
-              - name: DATUM_COINBASE_TAG_PRIMARY
-                value: "{{ .Values.datum.mining.coinbaseTagPrimary }}"
-              - name: DATUM_COINBASE_TAG_SECONDARY
-                value: "{{ .Values.datum.mining.coinbaseTagSecondary }}"
-              - name: DATUM_POOL_HOST
-                value: "{{ .Values.datum.mining.poolHost }}"
-            ports:
-              - name: stratum
-                containerPort: 23334
-                protocol: TCP
-              - name: http
-                containerPort: 8080
-                protocol: TCP
-            livenessProbe:
-              httpGet:
-                path: /
-                port: http
-            readinessProbe:
-              httpGet:
-                path: /
-                port: http
-            resources:
-              {{- toYaml .Values.datum.resources | nindent 12 }}
+        - name: datum
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.datum.image.repository }}:{{ .Values.datum.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.datum.image.pullPolicy }}
+          env:
+            - name: DATUM_RPCURL
+              value: "http://{{ .Values.datum.bitcoin.rpcHost }}"
+            - name: DATUM_RPCUSER
+              value: "{{ .Values.datum.bitcoin.rpcuser }}"
+            - name: DATUM_RPCPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
+                  key: password
+            - name: DATUM_POOL_ADDRESS
+              value: "{{ .Values.datum.mining.address }}"
+            - name: DATUM_COINBASE_TAG_PRIMARY
+              value: "{{ .Values.datum.mining.coinbaseTagPrimary }}"
+            - name: DATUM_COINBASE_TAG_SECONDARY
+              value: "{{ .Values.datum.mining.coinbaseTagSecondary }}"
+            - name: DATUM_POOL_HOST
+              value: "{{ .Values.datum.mining.poolHost }}"
+          ports:
+            - name: stratum
+              containerPort: 23334
+              protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.datum.resources | nindent 12 }}
       {{- end }}
       volumes:
         - name: config
