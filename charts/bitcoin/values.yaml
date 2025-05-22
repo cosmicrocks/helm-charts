@@ -54,6 +54,8 @@ bitcoinGenericConfig:
 
 replicaCount: 1
 
+terminationGracePeriodSeconds: 10
+
 priorityClassName: ""
 
 image:
