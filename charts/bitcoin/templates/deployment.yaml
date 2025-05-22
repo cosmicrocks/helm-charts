@@ -118,7 +118,7 @@ spec:
             - name: MEMPOOL_REPLACEMENT
               value: {{ .Values.bitcoin.mempoolReplacement | default "fee,-optin" | quote }}
             - name: MIN_RELAY_TX_FEE
-              value: {{ .Values.bitcoin.minRelayTxFee | default 0.00001 | toString | quote }}
+              value: "{{ .Values.bitcoin.minRelayTxFee | default 0.00001 }}"
             - name: PERMIT_BARE_MULTISIG
               value: {{ .Values.bitcoin.permitBareMultisig | default 0 | toString | quote }}
             - name: PERMIT_BARE_PUBKEY
@@ -130,11 +130,11 @@ spec:
 
             # Mining Block Template
             - name: BLOCK_MAX_SIZE
-              value: {{ .Values.bitcoin.blockMaxSize | default 3985000 | toString | quote }}
+              value: "{{ .Values.bitcoin.blockMaxSize | default 3985000 }}"
             - name: BLOCK_MAX_WEIGHT
-              value: {{ .Values.bitcoin.blockMaxWeight | default 3985000 | toString | quote }}
+              value: "{{ .Values.bitcoin.blockMaxWeight | default 3985000 }}"
             - name: BLOCK_MIN_TX_FEE
-              value: {{ .Values.bitcoin.blockMinTxFee | default 0.00001 | toString | quote }}
+              value: "{{ .Values.bitcoin.blockMinTxFee | default 0.00001 }}"
             - name: BLOCK_PRIORITY_SIZE
               value: {{ .Values.bitcoin.blockPrioritySize | default 0 | toString | quote }}
 
