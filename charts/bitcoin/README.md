@@ -1,6 +1,6 @@
 # bitcoin
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
+![Version: 1.0.3](https://img.shields.io/badge/Version-1.0.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
 
 A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam prevention.
 
@@ -55,6 +55,28 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | bitcoinGenericConfig[7] | string | `"zmqpubhashblock=tcp://0.0.0.0:8433"` |  |
 | bitcoinGenericConfig[8] | string | `"dbcache=4096"` |  |
 | bitcoinGenericConfig[9] | string | `"maxconnections=80"` |  |
+| datum.bitcoin.rpcHost | string | `"localhost:8332"` |  |
+| datum.bitcoin.rpcuser | string | `"rpcuser"` |  |
+| datum.bitcoin.secretName | string | `"bitcoin-rpcpassword"` |  |
+| datum.enabled | bool | `true` |  |
+| datum.image.pullPolicy | string | `"Always"` |  |
+| datum.image.repository | string | `"ghcr.io/cosmicrocks/datum"` |  |
+| datum.image.tag | string | `"v0.3.1beta"` |  |
+| datum.mining.address | string | `"bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"` |  |
+| datum.mining.coinbaseTagPrimary | string | `"DATUM Gateway"` |  |
+| datum.mining.coinbaseTagSecondary | string | `"Cosmic Rocks"` |  |
+| datum.mining.poolHost | string | `"datum-beta1.mine.ocean.xyz"` |  |
+| datum.persistence.accessMode | string | `"ReadWriteOncePod"` |  |
+| datum.persistence.enabled | bool | `true` |  |
+| datum.persistence.size | string | `"1Gi"` |  |
+| datum.persistence.storageClass | object | `{}` |  |
+| datum.resources.limits.memory | string | `"512Mi"` |  |
+| datum.resources.requests.cpu | string | `"100m"` |  |
+| datum.resources.requests.memory | string | `"512Mi"` |  |
+| datum.service.apiPort | int | `8080` |  |
+| datum.service.stratumPort | int | `23334` |  |
+| datum.serviceAccount.create | bool | `false` |  |
+| datum.serviceAccount.name | string | `""` |  |
 | extraInitContainers | list | `[]` |  |
 | fullnameOverride | string | `"bitcoin"` |  |
 | global.network | string | `"mainnet"` |  |
@@ -94,6 +116,7 @@ A Helm chart for Bitcoin knots, a Bitcoin full node implementation with spam pre
 | serviceAccount.create | bool | `true` |  |
 | serviceAccount.name | string | `""` |  |
 | sidecarContainers | list | `[]` |  |
+| terminationGracePeriodSeconds | int | `10` |  |
 | tolerations | list | `[]` |  |
 
 ----------------------------------------------

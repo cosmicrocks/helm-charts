@@ -30,8 +30,8 @@ spec:
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
-      terminationGracePeriodSeconds: 300
-      priorityClassName: {{ .Values.priorityClassName }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      priorityClassName: {{ .Values.priorityClassName | default "" }}
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -45,10 +45,14 @@ spec:
       {{- end }}
         - name: copy-bitcoin-config
           image: busybox
+          securityContext:
+            runAsUser: 0
+            privileged: true
           command:
           - 'sh'
           - '-c'
           - |
+            mkdir -p /data/.bitcoin/scripts
             cat <<EOF > /data/.bitcoin/bitcoin.conf
             rpcpassword=$(cat /rpcpassword/password)
             blocknotify=/data/.bitcoin/scripts/blocknotify.sh
@@ -61,10 +65,8 @@ spec:
               mountPath: /configmap
             - name: rpcpassword
               mountPath: /rpcpassword
-            - name: config
-              mountPath: /data/.bitcoin/
-            - name: scripts
-              mountPath: /data/.bitcoin/scripts/
+            - name: data
+              mountPath: /data
       containers:
       {{- if .Values.sidecarContainers }}
       {{- toYaml .Values.sidecarContainers | nindent 8 }}
@@ -113,12 +115,7 @@ spec:
               containerPort: {{ .Values.service.ports.zmqpubrawblock }}
           volumeMounts:
             - name: data
-              mountPath: /data/.bitcoin
-            - name: config
-              mountPath: /data/.bitcoin/bitcoin.conf
-              subPath: bitcoin.conf
-            - name: scripts
-              mountPath: /data/.bitcoin/scripts
+              mountPath: /data
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: exporter
@@ -141,11 +138,41 @@ spec:
           ports:
           - name: metrics
             containerPort: {{ .Values.service.ports.metrics }}
+      {{- if .Values.datum.enabled }}
+        - name: datum
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.datum.image.repository }}:{{ .Values.datum.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.datum.image.pullPolicy }}
+          env:
+            - name: DATUM_RPCURL
+              value: "http://{{ .Values.datum.bitcoin.rpcHost }}"
+            - name: DATUM_RPCUSER
+              value: "{{ .Values.datum.bitcoin.rpcuser }}"
+            - name: DATUM_RPCPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}
+                  key: password
+            - name: DATUM_POOL_ADDRESS
+              value: "{{ .Values.datum.mining.address }}"
+            - name: DATUM_COINBASE_TAG_PRIMARY
+              value: "{{ .Values.datum.mining.coinbaseTagPrimary }}"
+            - name: DATUM_COINBASE_TAG_SECONDARY
+              value: "{{ .Values.datum.mining.coinbaseTagSecondary }}"
+            - name: DATUM_POOL_HOST
+              value: "{{ .Values.datum.mining.poolHost }}"
+          ports:
+            - name: stratum
+              containerPort: 23334
+              protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.datum.resources | nindent 12 }}
+      {{- end }}
       volumes:
-        - name: config
-          emptyDir: {}
-        - name: scripts
-          emptyDir: {}
         - name: rpcpassword
           secret:
             secretName: {{ printf "%s-rpcpassword" (include "bitcoin.fullname" .) }}

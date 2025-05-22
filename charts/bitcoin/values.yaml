@@ -22,37 +22,39 @@ bitcoinGenericConfig:
 - zmqpubhashblock=tcp://0.0.0.0:8433
 
 # ======== Performance Tuning (16 GB RAM) ========
-- dbcache=4096                    # 4 GB DB cache
-- maxconnections=80              # Reasonable upper limit
-- rpcworkqueue=1000              # Large RPC queue
-- maxmempool=600                 # 600 MB mempool
+- dbcache=4096  # 4 GB DB cache
+- maxconnections=80  # Reasonable upper limit
+- rpcworkqueue=1000  # Large RPC queue
+- maxmempool=600  # 600 MB mempool
 - blockreconstructionextratxn=10000
 
 # ======== OCEAN Policy Compliance ========
-- datacarrier=1                  # Enable OP_RETURN (OCEAN requires)
-- acceptnonstdtxn=0              # Default
-- acceptnonstddatacarrier=0      # Default
-- datacarriercost=1              # Default
-- datacarriersize=42             # Default
-- bytespersigop=20               # Default
-- bytespersigopstrict=20         # Default
-- maxscriptsize=1650             # Default
-- mempoolfullrbf=1               # Default
+- datacarrier=1  # Enable OP_RETURN (OCEAN requires)
+- acceptnonstdtxn=0  # Default
+- acceptnonstddatacarrier=0  # Default
+- datacarriercost=1  # Default
+- datacarriersize=42  # Default
+- bytespersigop=20  # Default
+- bytespersigopstrict=20  # Default
+- maxscriptsize=1650  # Default
+- mempoolfullrbf=1  # Default
 - mempoolreplacement=fee,-optin  # Enforce full RBF (OCEAN requires)
-- mempooltruc=accept             # Default
-- minrelaytxfee=0.00001          # Default
-- permitbaremultisig=0           # Default
-- permitbarepubkey=0             # Default
-- rejectparasites=1              # Default
-- spkreuse=allow                 # Default
+- mempooltruc=accept  # Default
+- minrelaytxfee=0.00001  # Default
+- permitbaremultisig=0  # Default
+- permitbarepubkey=0  # Default
+- rejectparasites=1  # Default
+- spkreuse=allow  # Default
 
 # ======== Mining Block Template ========
-- blockmaxsize=3985000           # OCEAN override
-- blockmaxweight=3985000         # OCEAN override
-- blockmintxfee=0.00001         # Default
-- blockprioritysize=0           # OCEAN override
+- blockmaxsize=3985000  # OCEAN override
+- blockmaxweight=3985000  # OCEAN override
+- blockmintxfee=0.00001  # Default
+- blockprioritysize=0  # OCEAN override
 
 replicaCount: 1
+
+terminationGracePeriodSeconds: 10
 
 priorityClassName: ""
 
@@ -133,3 +135,39 @@ service:
     zmqpubhashblock: 8433
     p2p: 8333
     metrics: 9223
+
+datum:
+  enabled: true
+  image:
+    repository: ghcr.io/cosmicrocks/datum
+    pullPolicy: Always
+    tag: "v0.3.1beta"
+  serviceAccount:  # Note: Sidecars generally don't need separate service accounts if they operate under the main pod's SA
+    create: false  # Typically false for a sidecar
+    name: ""
+  # Pod security context for datum sidecar (if different from main container)
+  # securityContext: {}
+  service:  # Ports exposed by datum
+    stratumPort: 23334
+    apiPort: 8080
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 100m
+      memory: 512Mi
+  persistence:  # Persistence for datum, if needed, might require careful volume mounting
+    enabled: true
+    # existingClaim: ""
+    storageClass: {}
+    accessMode: ReadWriteOncePod  # This might be an issue if bitcoin also uses ReadWriteOncePod for the same PV. Consider ReadWriteMany or separate PVs.
+    size: 1Gi
+  mining:
+    address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"
+    coinbaseTagPrimary: "DATUM Gateway"
+    coinbaseTagSecondary: "Cosmic Rocks"
+    poolHost: "datum-beta1.mine.ocean.xyz"  # set to "" for solo mining
+  bitcoin:  # Configuration for datum to connect to the bitcoin node
+    rpcHost: "localhost:8332"  # Assuming bitcoin RPC is available on localhost within the pod
+    rpcuser: "rpcuser"  # Should ideally use the same rpcuser as the main bitcoin container
+    secretName: "bitcoin-rpcpassword"  # Should use the same secret

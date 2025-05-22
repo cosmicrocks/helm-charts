@@ -7,7 +7,7 @@ metadata:
 data:
   blocknotify.sh: |-
     #!/bin/sh
-    wget -qO - http://datum:8080/NOTIFY
+    wget -qO - http://127.0.0.1:8080/NOTIFY
 
   bitcoin.conf: |-
   {{- range .Values.bitcoinGenericConfig }}
