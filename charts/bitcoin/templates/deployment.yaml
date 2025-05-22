@@ -67,10 +67,10 @@ spec:
               mountPath: /data/.bitcoin/scripts/
       containers:
       {{- if .Values.sidecarContainers }}
-      {{- toYaml .Values.sidecarContainers | nindent 6 }}
+      {{- toYaml .Values.sidecarContainers | nindent 2 }}
       {{- end }}
       {{- if .Values.datum.enabled }}
-      {{- include "bitcoin.datumSidecar" . | nindent 6 }}
+      {{- include "bitcoin.datumSidecar" . | nindent 2 }}
       {{- end }}
         - name: {{ .Chart.Name }}
           securityContext:
