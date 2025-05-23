@@ -159,7 +159,7 @@ spec:
               containerPort: {{ .Values.service.ports.zmqpubrawblock }}
           volumeMounts:
             - name: data
-              mountPath: /data
+              mountPath: /data/.bitcoin
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
         - name: exporter
