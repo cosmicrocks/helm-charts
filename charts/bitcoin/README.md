@@ -60,6 +60,7 @@ A Helm chart for Bitcoin knots with datum for decentralized mining by the OCEAN 
 | bitcoin.zmqPubHashBlock | string | `"tcp://0.0.0.0:8433"` |  |
 | bitcoin.zmqPubRawBlock | string | `"tcp://0.0.0.0:8432"` |  |
 | bitcoin.zmqPubRawTx | string | `"tcp://0.0.0.0:8431"` |  |
+| command | list | `[]` |  |
 | datum.api.adminPassword | string | `"admin"` |  |
 | datum.api.extraBlockSubmissionsUrls | string | `"[]"` |  |
 | datum.bitcoin.rpcHost | string | `"localhost:8332"` |  |

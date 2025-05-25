@@ -54,6 +54,7 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "bitcoin-cli stop"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: [{{ .Values.command | default []  }}]
           env:
             # Core Settings
             - name: SERVER_ENABLED
