@@ -54,6 +54,10 @@ spec:
               exec:
                 command: ["/bin/sh", "-c", "bitcoin-cli stop"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.command }}
+          command:
+            {{- toYaml .Values.command | nindent 12 }}
+          {{- end }}
           env:
             # Core Settings
             - name: SERVER_ENABLED
