@@ -165,6 +165,7 @@ spec:
             - name: api
               containerPort: {{ .Values.service.ports.api | default 8080 }}
               protocol: TCP
+          {{- if .Values.healthChecks.enabled }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -172,6 +173,7 @@ spec:
           {{- with .Values.readinessProbe }}
           readinessProbe:
             {{- toYaml . | nindent 12 }}
+          {{- end }}
           {{- end }}
           {{- with .Values.resources }}
           resources:

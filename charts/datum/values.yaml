@@ -115,6 +115,9 @@ resources:
     memory: 512Mi
 
 # Health checks - Datum exposes API on the API port
+healthChecks:
+  enabled: true  # Set to false to disable health checks (useful for testing when Bitcoin is not available)
+
 livenessProbe:
   httpGet:
     path: /api/status

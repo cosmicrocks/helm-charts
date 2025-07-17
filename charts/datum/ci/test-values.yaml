@@ -1,0 +1,9 @@
+# Test values for chart testing
+# Disable health checks since Bitcoin RPC won't be available during testing
+healthChecks:
+  enabled: false
+
+# Use test mining configuration
+mining:
+  address: "bc1qtest123test123test123test123test123test123"
+  poolHost: ""  # Empty for solo mining during tests
