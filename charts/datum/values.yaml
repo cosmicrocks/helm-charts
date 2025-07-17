@@ -46,8 +46,9 @@ service:
 bitcoin:
   rpcHost: "bitcoin:8332"        # Bitcoin RPC service endpoint
   rpcUser: "rpcuser"             # Bitcoin RPC username
-  rpcPasswordSecret:             # Secret containing RPC password
-    name: "bitcoin-rpcpassword"  # Name of the secret
+  rpcPassword: "testpassword"     # RPC password (for standalone deployment or testing)
+  rpcPasswordSecret:             # External secret containing RPC password (optional)
+    name: ""                     # Name of the secret (leave empty to use built-in password)
     key: "password"              # Key within the secret
 
 # Bitcoin daemon-specific settings

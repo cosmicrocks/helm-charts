@@ -49,8 +49,13 @@ spec:
             - name: DATUM_RPCPASSWORD
               valueFrom:
                 secretKeyRef:
+                  {{- if .Values.bitcoin.rpcPasswordSecret.name }}
                   name: {{ .Values.bitcoin.rpcPasswordSecret.name }}
                   key: {{ .Values.bitcoin.rpcPasswordSecret.key }}
+                  {{- else }}
+                  name: {{ include "datum.fullname" . }}-rpcpassword
+                  key: password
+                  {{- end }}
             - name: DATUM_WORK_UPDATE_SECONDS
               value: {{ .Values.bitcoind.workUpdateSeconds | default 40 | toString | quote }}
             - name: DATUM_NOTIFY_FALLBACK
