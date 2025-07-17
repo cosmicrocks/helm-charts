@@ -6,7 +6,7 @@ healthChecks:
 # Use test mining configuration
 mining:
   address: "bc1qtest123test123test123test123test123test123"
-  poolHost: "test.pool.local"  # Dummy pool host for testing
+  poolHost: ""  # Empty string for solo-mining during testing
 
 # Override bitcoin RPC to use a test password that won't conflict
 bitcoin:
