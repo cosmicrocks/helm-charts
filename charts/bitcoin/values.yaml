@@ -112,7 +112,7 @@ resources:
   #   memory: 16Gi
 
 persistence:
-  enabled: false
+  enabled: true  # Enable persistence by default for StatefulSet
   storageClass: ""
   # existingClaim: ""
   accessMode: ReadWriteOnce

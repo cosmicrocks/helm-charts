@@ -10,6 +10,7 @@ metadata:
   {{- end }}
 spec:
   type: {{ .Values.service.type }}
+  clusterIP: None  # Headless service required for StatefulSet
   ports:
     - name: rpc
       port: {{ .Values.global.service.ports.rpc }}
