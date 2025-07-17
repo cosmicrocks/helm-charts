@@ -20,7 +20,7 @@ helm install datum ./charts/datum \
   --set mining.poolHost="datum-beta1.mine.ocean.xyz"
 ```
 
-## Key Changes in the Split
+## Key Changes in the Separation
 
 ### Bitcoin Chart (v2.0.0)
 - ✅ Removed Datum sidecar container
@@ -37,7 +37,7 @@ helm install datum ./charts/datum \
 - ✅ Health checks via API endpoint
 - ✅ Proper resource limits and security context
 
-## Benefits of the Split
+## Benefits of the Separation
 
 1. **Modularity**: Deploy Bitcoin and Datum independently
 2. **Flexibility**: Use external Bitcoin nodes with Datum
@@ -53,4 +53,4 @@ Users upgrading from the old combined chart should:
 2. Deploy the new Datum chart v1.0.0 with appropriate configuration
 3. Update mining configurations to point to the new services
 
-The split preserves all functionality while providing better separation of concerns.
+The separation preserves all functionality while providing better separation of concerns.
