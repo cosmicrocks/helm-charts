@@ -35,6 +35,7 @@ A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 | bitcoind.notifyFallback | bool | `true` |  |
 | bitcoind.workUpdateSeconds | int | `40` |  |
 | fullnameOverride | string | `""` |  |
+| healthChecks.enabled | bool | `true` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/cosmicrocks/datum"` |  |
 | image.tag | string | `"v0.3.1beta"` |  |
