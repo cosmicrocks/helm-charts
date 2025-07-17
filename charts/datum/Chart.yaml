@@ -1,0 +1,19 @@
+apiVersion: v2
+name: datum
+description: A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
+keywords:
+  - bitcoin
+  - mining
+  - datum
+  - ocean
+  - stratum
+type: application
+version: 1.0.0
+home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum"
+sources:
+  - "https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum"
+icon: "https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/datum/icon.png"
+appVersion: "v0.3.1beta"
+maintainers:
+  - name: esomore
+    email: itamar@cosmic.rocks

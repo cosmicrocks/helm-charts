@@ -1,0 +1,181 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "datum.fullname" . }}
+  labels:
+    {{- include "datum.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "datum.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "datum.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "datum.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          {{- with .Values.securityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            # Bitcoin RPC Connection
+            - name: DATUM_RPCURL
+              value: "http://{{ .Values.bitcoin.rpcHost }}"
+            - name: DATUM_RPCUSER
+              value: {{ .Values.bitcoin.rpcUser | quote }}
+            - name: DATUM_RPCPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bitcoin.rpcPasswordSecret.name }}
+                  key: {{ .Values.bitcoin.rpcPasswordSecret.key }}
+            - name: DATUM_WORK_UPDATE_SECONDS
+              value: {{ .Values.bitcoind.workUpdateSeconds | default 40 | toString | quote }}
+            - name: DATUM_NOTIFY_FALLBACK
+              value: {{ .Values.bitcoind.notifyFallback | default true | toString | quote }}
+
+            # Stratum Server Config
+            - name: DATUM_LISTEN_PORT
+              value: {{ .Values.service.ports.stratum | default 23334 | toString | quote }}
+            - name: DATUM_MAX_CLIENTS_PER_THREAD
+              value: {{ .Values.stratum.maxClientsPerThread | default 128 | toString | quote }}
+            - name: DATUM_MAX_THREADS
+              value: {{ .Values.stratum.maxThreads | default 8 | toString | quote }}
+            - name: DATUM_MAX_CLIENTS
+              value: {{ .Values.stratum.maxClients | default 1024 | toString | quote }}
+            - name: DATUM_VARDIFF_MIN
+              value: {{ .Values.stratum.vardiffMin | default 16384 | toString | quote }}
+            - name: DATUM_VARDIFF_TARGET_SHARES_MIN
+              value: {{ .Values.stratum.vardiffTargetSharesMin | default 8 | toString | quote }}
+            - name: DATUM_VARDIFF_QUICKDIFF_COUNT
+              value: {{ .Values.stratum.vardiffQuickdiffCount | default 8 | toString | quote }}
+            - name: DATUM_VARDIFF_QUICKDIFF_DELTA
+              value: {{ .Values.stratum.vardiffQuickdiffDelta | default 8 | toString | quote }}
+            - name: DATUM_SHARE_STALE_SECONDS
+              value: {{ .Values.stratum.shareStaleSeconds | default 120 | toString | quote }}
+            - name: DATUM_FINGERPRINT_MINERS
+              value: {{ .Values.stratum.fingerprintMiners | default true | toString | quote }}
+            - name: DATUM_IDLE_TIMEOUT_NO_SUBSCRIBE
+              value: {{ .Values.stratum.idleTimeoutNoSubscribe | default 15 | toString | quote }}
+            - name: DATUM_IDLE_TIMEOUT_NO_SHARES
+              value: {{ .Values.stratum.idleTimeoutNoShares | default 7200 | toString | quote }}
+            - name: DATUM_IDLE_TIMEOUT_MAX_LAST_WORK
+              value: {{ .Values.stratum.idleTimeoutMaxLastWork | default 0 | toString | quote }}
+
+            # Mining Configuration
+            - name: DATUM_POOL_ADDRESS
+              value: {{ .Values.mining.address | quote }}
+            - name: DATUM_COINBASE_TAG_PRIMARY
+              value: {{ .Values.mining.coinbaseTagPrimary | quote }}
+            - name: DATUM_COINBASE_TAG_SECONDARY
+              value: {{ .Values.mining.coinbaseTagSecondary | quote }}
+            - name: DATUM_COINBASE_UNIQUE_ID
+              value: {{ .Values.mining.coinbaseUniqueId | default 32359 | toString | quote }}
+            - name: DATUM_SAVE_SUBMITBLOCKS_DIR
+              value: {{ .Values.mining.saveSubmitblocksDir | default "" | quote }}
+
+            # API Configuration
+            - name: DATUM_API_LISTEN_PORT
+              value: {{ .Values.service.ports.api | default 8080 | toString | quote }}
+            - name: DATUM_API_ADMIN_PASSWORD
+              value: {{ .Values.api.adminPassword | default "admin" | quote }}
+            - name: DATUM_EXTRA_BLOCK_SUBMISSIONS_URLS
+              value: {{ .Values.api.extraBlockSubmissionsUrls | default "[]" | quote }}
+
+            # Logging Configuration
+            - name: DATUM_LOG_TO_CONSOLE
+              value: {{ .Values.logger.logToConsole | default true | toString | quote }}
+            - name: DATUM_LOG_TO_STDERR
+              value: {{ .Values.logger.logToStderr | default false | toString | quote }}
+            - name: DATUM_LOG_TO_FILE
+              value: {{ .Values.logger.logToFile | default false | toString | quote }}
+            - name: DATUM_LOG_FILE
+              value: {{ .Values.logger.logFile | default "" | quote }}
+            - name: DATUM_LOG_ROTATE_DAILY
+              value: {{ .Values.logger.logRotateDaily | default true | toString | quote }}
+            - name: DATUM_LOG_CALLING_FUNCTION
+              value: {{ .Values.logger.logCallingFunction | default true | toString | quote }}
+            - name: DATUM_LOG_LEVEL_CONSOLE
+              value: {{ .Values.logger.logLevelConsole | default 2 | toString | quote }}
+            - name: DATUM_LOG_LEVEL_FILE
+              value: {{ .Values.logger.logLevelFile | default 1 | toString | quote }}
+
+            # Datum Pool Settings
+            - name: DATUM_POOL_HOST
+              value: {{ .Values.mining.poolHost | quote }}
+            - name: DATUM_POOL_PORT
+              value: {{ .Values.pool.port | default 28915 | toString | quote }}
+            - name: DATUM_POOL_PUBKEY
+              value: {{ .Values.pool.pubkey | default "f21f2f0ef0aa1970468f22bad9bb7f4535146f8e4a8f646bebc93da3d89b1406f40d032f09a417d94dc068055df654937922d2c89522e3e8f6f0e649de473003" | quote }}
+            - name: DATUM_POOL_PASS_WORKERS
+              value: {{ .Values.pool.passWorkers | default true | toString | quote }}
+            - name: DATUM_POOL_PASS_FULL_USERS
+              value: {{ .Values.pool.passFullUsers | default true | toString | quote }}
+            - name: DATUM_ALWAYS_PAY_SELF
+              value: {{ .Values.pool.alwaysPaySelf | default true | toString | quote }}
+            - name: DATUM_POOLED_MINING_ONLY
+              value: {{ .Values.pool.pooledMiningOnly | default false | toString | quote }}
+            - name: DATUM_PROTOCOL_GLOBAL_TIMEOUT
+              value: {{ .Values.pool.protocolGlobalTimeout | default 60 | toString | quote }}
+
+          ports:
+            - name: stratum
+              containerPort: {{ .Values.service.ports.stratum | default 23334 }}
+              protocol: TCP
+            - name: api
+              containerPort: {{ .Values.service.ports.api | default 8080 }}
+              protocol: TCP
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      {{- with .Values.volumes }}
+      volumes:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
