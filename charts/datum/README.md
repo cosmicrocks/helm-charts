@@ -28,8 +28,9 @@ A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 | autoscaling.minReplicas | int | `1` |  |
 | autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
 | bitcoin.rpcHost | string | `"bitcoin:8332"` |  |
+| bitcoin.rpcPassword | string | `"testpassword"` |  |
 | bitcoin.rpcPasswordSecret.key | string | `"password"` |  |
-| bitcoin.rpcPasswordSecret.name | string | `"bitcoin-rpcpassword"` |  |
+| bitcoin.rpcPasswordSecret.name | string | `""` |  |
 | bitcoin.rpcUser | string | `"rpcuser"` |  |
 | bitcoind.notifyFallback | bool | `true` |  |
 | bitcoind.workUpdateSeconds | int | `40` |  |
