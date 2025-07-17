@@ -18,3 +18,5 @@ charts/**/charts
 
 # Temporary files
 chart-testing_*.tar.gz
+ct
+ct.tar.gz
