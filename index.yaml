@@ -3,6 +3,27 @@ entries:
   bitcoin:
   - apiVersion: v2
     appVersion: knots20250305
+    created: "2025-07-17T17:51:41.832265215Z"
+    description: A Helm chart for Bitcoin knots with datum for decentralized mining
+      by the OCEAN protocol.
+    digest: fc2e660d4c667f6bfae347d1a87a8a835cf41350c170c2a15a01d66fa0a266e1
+    home: https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin
+    icon: https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/bitcoin/icon.png
+    keywords:
+    - bitcoin
+    - knots
+    maintainers:
+    - email: itamar@cosmic.rocks
+      name: esomore
+    name: bitcoin
+    sources:
+    - https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin
+    type: application
+    urls:
+    - https://github.com/cosmicrocks/helm-charts/releases/download/bitcoin-1.1.0/bitcoin-1.1.0.tgz
+    version: 1.1.0
+  - apiVersion: v2
+    appVersion: knots20250305
     created: "2025-05-25T03:19:45.907285274Z"
     description: A Helm chart for Bitcoin knots with datum for decentralized mining
       by the OCEAN protocol.
@@ -219,4 +240,4 @@ entries:
     urls:
     - https://github.com/cosmicrocks/helm-charts/releases/download/datum-1.0.0/datum-1.0.0.tgz
     version: 1.0.0
-generated: "2025-05-25T03:19:45.907329938Z"
+generated: "2025-07-17T17:51:41.832318424Z"
