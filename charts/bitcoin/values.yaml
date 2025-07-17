@@ -138,5 +138,3 @@ service:
     zmqpubhashblock: 8433
     p2p: 8333
     metrics: 9223
-
-
