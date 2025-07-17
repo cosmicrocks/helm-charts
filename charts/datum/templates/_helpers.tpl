@@ -1,11 +1,16 @@
-{{/* vim: set filetype=mustache: */}}
+{{/*
+Expand the name of the chart.
+*/}}
+{{- define "datum.name" -}}
+{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- end }}
 
 {{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.
 */}}
-{{- define "bitcoin.fullname" -}}
+{{- define "datum.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -21,16 +26,16 @@ If release name contains chart name it will be used as a full name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "bitcoin.chart" -}}
+{{- define "datum.chart" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "bitcoin.labels" -}}
-helm.sh/chart: {{ include "bitcoin.chart" . }}
-{{ include "bitcoin.selectorLabels" . }}
+{{- define "datum.labels" -}}
+helm.sh/chart: {{ include "datum.chart" . }}
+{{ include "datum.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -40,37 +45,18 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "bitcoin.selectorLabels" -}}
-app.kubernetes.io/name: {{ .Chart.Name }}
+{{- define "datum.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "datum.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
 Create the name of the service account to use
 */}}
-{{- define "bitcoin.serviceAccountName" -}}
+{{- define "datum.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "bitcoin.fullname" .) .Values.serviceAccount.name }}
+{{- default (include "datum.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
-
-{{- define "rpcpassword" -}}
-
-{{- $secret := (lookup "v1" "Secret" .Release.Namespace (printf "%s-rpcpassword" (include "bitcoin.fullname" .))) -}}
-{{- if $secret -}}
-{{/*
-   Reusing current password since secret exists
-*/}}
-{{-  $secret.data.password | b64dec -}}
-{{- else -}}
-{{/*
-    Generate new password
-*/}}
-{{- randAlpha 24 -}}
-{{- end -}}
-{{- end -}}
-
-

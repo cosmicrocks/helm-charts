@@ -15,3 +15,8 @@ charts/**/charts
 
 # Other
 .env
+
+# Temporary files
+chart-testing_*.tar.gz
+ct
+ct.tar.gz

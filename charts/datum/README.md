@@ -1,0 +1,110 @@
+# datum
+
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.3.1beta](https://img.shields.io/badge/AppVersion-v0.3.1beta-informational?style=flat-square)
+
+A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
+
+**Homepage:** <https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| esomore | <itamar@cosmic.rocks> |  |
+
+## Source Code
+
+* <https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum>
+
+## Values
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| affinity | object | `{}` |  |
+| api.adminPassword | string | `"admin"` |  |
+| api.extraBlockSubmissionsUrls | string | `"[]"` |  |
+| autoscaling.enabled | bool | `false` |  |
+| autoscaling.maxReplicas | int | `100` |  |
+| autoscaling.minReplicas | int | `1` |  |
+| autoscaling.targetCPUUtilizationPercentage | int | `80` |  |
+| bitcoin.rpcHost | string | `"bitcoin:8332"` |  |
+| bitcoin.rpcPassword | string | `"testpassword"` |  |
+| bitcoin.rpcPasswordSecret.key | string | `"password"` |  |
+| bitcoin.rpcPasswordSecret.name | string | `""` |  |
+| bitcoin.rpcUser | string | `"rpcuser"` |  |
+| bitcoind.notifyFallback | bool | `true` |  |
+| bitcoind.workUpdateSeconds | int | `40` |  |
+| fullnameOverride | string | `""` |  |
+| healthChecks.enabled | bool | `true` |  |
+| image.pullPolicy | string | `"Always"` |  |
+| image.repository | string | `"ghcr.io/cosmicrocks/datum"` |  |
+| image.tag | string | `"v0.3.1beta"` |  |
+| imagePullSecrets | list | `[]` |  |
+| ingress.enabled | bool | `false` |  |
+| livenessProbe.httpGet.path | string | `"/api/status"` |  |
+| livenessProbe.httpGet.port | string | `"api"` |  |
+| livenessProbe.initialDelaySeconds | int | `30` |  |
+| livenessProbe.periodSeconds | int | `30` |  |
+| logger.logCallingFunction | bool | `true` |  |
+| logger.logFile | string | `""` |  |
+| logger.logLevelConsole | int | `2` |  |
+| logger.logLevelFile | int | `1` |  |
+| logger.logRotateDaily | bool | `true` |  |
+| logger.logToConsole | bool | `true` |  |
+| logger.logToFile | bool | `false` |  |
+| logger.logToStderr | bool | `false` |  |
+| mining.address | string | `"bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"` |  |
+| mining.coinbaseTagPrimary | string | `"DATUM Gateway"` |  |
+| mining.coinbaseTagSecondary | string | `"Cosmic Rocks"` |  |
+| mining.coinbaseUniqueId | int | `32359` |  |
+| mining.poolHost | string | `"datum-beta1.mine.ocean.xyz"` |  |
+| mining.saveSubmitblocksDir | string | `""` |  |
+| nameOverride | string | `""` |  |
+| nodeSelector | object | `{}` |  |
+| podAnnotations | object | `{}` |  |
+| podLabels | object | `{}` |  |
+| podSecurityContext.fsGroup | int | `1000` |  |
+| pool.alwaysPaySelf | bool | `true` |  |
+| pool.passFullUsers | bool | `true` |  |
+| pool.passWorkers | bool | `true` |  |
+| pool.pooledMiningOnly | bool | `false` |  |
+| pool.port | int | `28915` |  |
+| pool.protocolGlobalTimeout | int | `60` |  |
+| pool.pubkey | string | `"f21f2f0ef0aa1970468f22bad9bb7f4535146f8e4a8f646bebc93da3d89b1406f40d032f09a417d94dc068055df654937922d2c89522e3e8f6f0e649de473003"` |  |
+| readinessProbe.httpGet.path | string | `"/api/status"` |  |
+| readinessProbe.httpGet.port | string | `"api"` |  |
+| readinessProbe.initialDelaySeconds | int | `5` |  |
+| readinessProbe.periodSeconds | int | `10` |  |
+| replicaCount | int | `1` |  |
+| resources.limits.memory | string | `"512Mi"` |  |
+| resources.requests.cpu | string | `"100m"` |  |
+| resources.requests.memory | string | `"512Mi"` |  |
+| securityContext.readOnlyRootFilesystem | bool | `true` |  |
+| securityContext.runAsGroup | int | `1000` |  |
+| securityContext.runAsNonRoot | bool | `true` |  |
+| securityContext.runAsUser | int | `1000` |  |
+| service.ports.api | int | `8080` |  |
+| service.ports.stratum | int | `23334` |  |
+| service.type | string | `"ClusterIP"` |  |
+| serviceAccount.annotations | object | `{}` |  |
+| serviceAccount.automount | bool | `true` |  |
+| serviceAccount.create | bool | `true` |  |
+| serviceAccount.name | string | `""` |  |
+| stratum.fingerprintMiners | bool | `true` |  |
+| stratum.idleTimeoutMaxLastWork | int | `0` |  |
+| stratum.idleTimeoutNoShares | int | `7200` |  |
+| stratum.idleTimeoutNoSubscribe | int | `15` |  |
+| stratum.maxClients | int | `1024` |  |
+| stratum.maxClientsPerThread | int | `128` |  |
+| stratum.maxThreads | int | `8` |  |
+| stratum.shareStaleSeconds | int | `120` |  |
+| stratum.vardiffMin | int | `16384` |  |
+| stratum.vardiffQuickdiffCount | int | `8` |  |
+| stratum.vardiffQuickdiffDelta | int | `8` |  |
+| stratum.vardiffTargetSharesMin | int | `8` |  |
+| tolerations | list | `[]` |  |
+| volumeMounts | list | `[]` |  |
+| volumes | list | `[]` |  |
+
+----------------------------------------------
+Autogenerated from chart metadata using [helm-docs v1.14.2](https://github.com/norwoodj/helm-docs/releases/v1.14.2)

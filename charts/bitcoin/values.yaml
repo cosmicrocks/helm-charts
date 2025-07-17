@@ -49,8 +49,6 @@ bitcoin:
   spkReuse: "allow"  # Default
 
   # Mining Block Template
-  datumHost: 127.0.0.1
-  datumPort: 8080
   blockMaxSize: 3985000  # OCEAN override
   blockMaxWeight: 3985000  # OCEAN override
   blockMinTxFee: 0.00001  # Default
@@ -140,87 +138,3 @@ service:
     zmqpubhashblock: 8433
     p2p: 8333
     metrics: 9223
-    datum: 8080
-    stratum: 23334
-
-datum:
-  enabled: true
-  image:
-    repository: ghcr.io/cosmicrocks/datum
-    pullPolicy: Always
-    tag: "v0.3.1beta"
-
-  podSecurityContext:
-    fsGroup: 1000
-
-  service:
-    stratumPort: 23334  # Stratum protocol port
-    apiPort: 8080      # API port
-
-  # Bitcoin RPC connection configuration
-  bitcoin:
-    rpcHost: "localhost:8332"  # Bitcoin RPC host within the pod
-    rpcuser: "rpcuser"         # Bitcoin RPC username
-
-  # Bitcoin daemon-specific settings
-  bitcoind:
-    workUpdateSeconds: 40      # How often to update mining work
-    notifyFallback: true       # Use fallback notification mechanism
-
-  # Stratum server configuration
-  stratum:
-    maxClientsPerThread: 128    # Maximum clients per thread
-    maxThreads: 8               # Maximum number of threads
-    maxClients: 1024            # Maximum number of clients
-    vardiffMin: 16384           # Minimum variable difficulty
-    vardiffTargetSharesMin: 8   # Target shares minimum for vardiff
-    vardiffQuickdiffCount: 8    # Quickdiff count
-    vardiffQuickdiffDelta: 8    # Quickdiff delta
-    shareStaleSeconds: 120      # Seconds after which shares are considered stale
-    fingerprintMiners: true     # Enable miner fingerprinting
-    idleTimeoutNoSubscribe: 15  # Idle timeout for connections without subscribe
-    idleTimeoutNoShares: 7200   # Idle timeout for connections without shares
-    idleTimeoutMaxLastWork: 0   # Maximum time since last work (0 = disabled)
-
-  # Mining configuration
-  mining:
-    address: "bc1q676lj6ttgpu7p25uk3ex2thyxdrvralct2upl4"  # Mining reward address
-    coinbaseTagPrimary: "DATUM Gateway"                   # Primary coinbase tag
-    coinbaseTagSecondary: "Cosmic Rocks"                  # Secondary coinbase tag
-    coinbaseUniqueId: 32359                               # Unique ID for coinbase
-    saveSubmitblocksDir: ""                               # Directory to save submitted blocks (empty = disabled)
-    poolHost: "datum-beta1.mine.ocean.xyz"                # Pool host for mining (empty for solo mining)
-
-  # API configuration
-  api:
-    adminPassword: "admin"                                # Admin password for API
-    extraBlockSubmissionsUrls: "[]"                       # Extra URLs to submit blocks to (JSON array as string)
-
-  # Logging configuration
-  logger:
-    logToConsole: true                                    # Log to console
-    logToStderr: false                                    # Log to stderr
-    logToFile: false                                      # Log to file
-    logFile: ""                                           # Log file path (empty = disabled)
-    logRotateDaily: true                                  # Rotate logs daily
-    logCallingFunction: true                              # Log calling functions
-    logLevelConsole: 2                                    # Console log level
-    logLevelFile: 1                                       # File log level
-
-  # Pool settings
-  pool:
-    port: 28915                                           # Pool port
-    pubkey: "f21f2f0ef0aa1970468f22bad9bb7f4535146f8e4a8f646bebc93da3d89b1406f40d032f09a417d94dc068055df654937922d2c89522e3e8f6f0e649de473003"  # Pool public key
-    passWorkers: true                                     # Pass worker information
-    passFullUsers: true                                   # Pass full user information
-    alwaysPaySelf: true                                   # Always pay self
-    pooledMiningOnly: false                               # Pooled mining only
-    protocolGlobalTimeout: 60                             # Protocol global timeout
-
-  # Resources for the Datum container
-  resources:
-    limits:
-      memory: 512Mi
-    requests:
-      cpu: 100m
-      memory: 512Mi
