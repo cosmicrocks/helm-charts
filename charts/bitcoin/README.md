@@ -1,6 +1,6 @@
 # bitcoin
 
-![Version: 1.0.9](https://img.shields.io/badge/Version-1.0.9-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
+![Version: 1.1.0](https://img.shields.io/badge/Version-1.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: knots20250305](https://img.shields.io/badge/AppVersion-knots20250305-informational?style=flat-square)
 
 A Helm chart for Bitcoin knots with datum for decentralized mining by the OCEAN protocol.
 
@@ -125,7 +125,7 @@ A Helm chart for Bitcoin knots with datum for decentralized mining by the OCEAN 
 | nameOverride | string | `""` |  |
 | nodeSelector | object | `{}` |  |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
-| persistence.enabled | bool | `false` |  |
+| persistence.enabled | bool | `true` |  |
 | persistence.size | string | `"900Gi"` |  |
 | persistence.storageClass | string | `""` |  |
 | podAnnotations | object | `{}` |  |
