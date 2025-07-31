@@ -233,6 +233,30 @@ entries:
     version: 1.0.1
   datum:
   - apiVersion: v2
+    appVersion: v0.3.1beta
+    created: "2025-07-31T17:18:20.618968465Z"
+    description: A Helm chart for Datum - a decentralized mining gateway for the OCEAN
+      protocol.
+    digest: 8db255476a1936c532c237d867890721ff18c9c05a2dfe35a05f674fc299cb49
+    home: https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum
+    icon: https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/datum/icon.png
+    keywords:
+    - bitcoin
+    - mining
+    - datum
+    - ocean
+    - stratum
+    maintainers:
+    - email: itamar@cosmic.rocks
+      name: esomore
+    name: datum
+    sources:
+    - https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum
+    type: application
+    urls:
+    - https://github.com/cosmicrocks/helm-charts/releases/download/datum-1.0.1/datum-1.0.1.tgz
+    version: 1.0.1
+  - apiVersion: v2
     appVersion: 0.3.1beta
     created: "2025-05-21T05:28:31.633974002Z"
     dependencies:
@@ -260,4 +284,4 @@ entries:
     urls:
     - https://github.com/cosmicrocks/helm-charts/releases/download/datum-1.0.0/datum-1.0.0.tgz
     version: 1.0.0
-generated: "2025-07-17T21:32:03.387147562Z"
+generated: "2025-07-31T17:18:20.619003132Z"
