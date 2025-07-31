@@ -1,6 +1,6 @@
 # datum
 
-![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.3.1beta](https://img.shields.io/badge/AppVersion-v0.3.1beta-informational?style=flat-square)
+![Version: 1.0.1](https://img.shields.io/badge/Version-1.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.4.0beta](https://img.shields.io/badge/AppVersion-v0.4.0beta-informational?style=flat-square)
 
 A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 
@@ -38,7 +38,7 @@ A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 | healthChecks.enabled | bool | `true` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/cosmicrocks/datum"` |  |
-| image.tag | string | `"v0.3.1beta"` |  |
+| image.tag | string | `"v0.4.0beta"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.enabled | bool | `false` |  |
 | livenessProbe.httpGet.path | string | `"/api/status"` |  |
