@@ -79,7 +79,7 @@ jobs:
       - name: Run chart-testing (list-changed)
         id: list-changed
         run: |
-          ct list-changed --target-branch main > changed.txt
+          ct list-changed --config ct.yaml --target-branch main > changed.txt
           if [ -s changed.txt ]; then
             echo "changed=true" >> $GITHUB_OUTPUT
           else
@@ -88,7 +88,7 @@ jobs:
 
       - name: Run chart-testing (lint)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+        run: ct lint --config ct.yaml --target-branch ${{ github.event.repository.default_branch }}
 
       - name: Create kind cluster
         if: steps.list-changed.outputs.changed == 'true'
@@ -96,7 +96,7 @@ jobs:
 
       - name: Run chart-testing (install)
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct install --target-branch ${{ github.event.repository.default_branch }}
+        run: ct install --config ct.yaml --target-branch ${{ github.event.repository.default_branch }}
 
   release:
     needs: changes
