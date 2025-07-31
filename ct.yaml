@@ -1,0 +1,21 @@
+# Chart Testing (ct) configuration
+# This configuration is used for both pull requests and releases
+
+# Chart directories to scan
+chart-dirs:
+  - charts
+
+# Target branch for comparison
+target-branch: main
+
+# Disable version increment checking for pull requests
+# This allows PRs to be linted without requiring version bumps
+# since versions are handled automatically during release
+check-version-increment: false
+
+# Enable other validations
+validate-chart-schema: true
+chart-yaml-schema: etc/chart_schema.yaml
+lint-conf: etc/lintconf.yaml
+validate-maintainers: true  
+validate-yaml: true

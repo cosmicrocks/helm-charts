@@ -1,0 +1,17 @@
+# Test values for LoadBalancer service type
+global:
+  network: regtest
+
+# Reduce resource requirements for testing
+bitcoin:
+  dbCache: 100
+  maxConnections: 10
+  rpcWorkQueue: 16
+  maxMempool: 10
+
+persistence:
+  enabled: true
+  size: 1Gi
+
+service:
+  type: LoadBalancer

@@ -58,6 +58,10 @@ spec:
             {{- toYaml .Values.command | nindent 12 }}
           {{- end }}
           env:
+            # Network Settings
+            - name: NETWORK
+              value: {{ .Values.global.network | default "mainnet" | quote }}
+            
             # Core Settings
             - name: SERVER_ENABLED
               value: {{ .Values.bitcoin.serverEnabled | default 1 | toString | quote }}
