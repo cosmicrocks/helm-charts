@@ -8,7 +8,7 @@ keywords:
   - ocean
   - stratum
 type: application
-version: 1.0.1
+version: 1.0.2
 home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum"
 sources:
   - "https://github.com/cosmicrocks/helm-charts/tree/main/charts/datum"

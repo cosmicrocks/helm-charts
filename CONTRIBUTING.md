@@ -1,5 +1,50 @@
 # Development Workflow
 
+## Chart Versioning and Release Process
+
+### Important: Always Bump Chart Versions for Meaningful Changes
+
+When making changes to Helm charts (templates, values, configuration, etc.), you **must** bump the chart version in `Chart.yaml` to trigger automatic releases. The chart-releaser-action only creates new releases when it detects chart version changes.
+
+#### Version Bumping Guidelines
+
+1. **Patch version bump** (e.g., 1.0.1 → 1.0.2): For bug fixes, security updates, or minor configuration changes
+2. **Minor version bump** (e.g., 1.0.0 → 1.1.0): For new features, backwards-compatible changes
+3. **Major version bump** (e.g., 1.0.0 → 2.0.0): For breaking changes
+
+#### Example Scenarios
+
+- **App version update**: If only updating `appVersion` (like updating datum from v0.3.1beta to v0.4.0beta), bump the patch version
+- **Template changes**: Any changes to templates/ files require at least a patch version bump
+- **Configuration changes**: Changes to values.yaml, especially defaults, require version bump
+- **CI/Testing changes**: Changes only to ci/ test files may not require version bump unless they affect chart behavior
+
+#### Process
+
+1. Make your changes to chart files
+2. Update the `version` field in `charts/<chart-name>/Chart.yaml` (or use the helper script below)
+3. Run `helm lint charts/<chart-name>` to verify
+4. Commit and push your changes
+5. The release workflow will automatically:
+   - Detect version changes
+   - Create GitHub releases
+   - Package and publish charts
+
+**Helper Script**: Use the provided script to automate version bumping:
+
+```bash
+# Bump patch version (bug fixes, minor changes)
+./scripts/bump-chart-version.sh bitcoin patch
+
+# Bump minor version (new features)
+./scripts/bump-chart-version.sh datum minor
+
+# Bump major version (breaking changes)
+./scripts/bump-chart-version.sh bitcoin major
+```
+
+**Note**: The `ct.yaml` configuration disables version checking during PR validation to allow flexibility, but releases only happen when versions are actually bumped.
+
 ## Setting up pre-commit hooks
 
 If you want to automatically generate `README.md` files with a pre-commit hook, make sure you
