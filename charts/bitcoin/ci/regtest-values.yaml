@@ -1,0 +1,25 @@
+# Test values for regtest network mode
+# This configuration is optimized for fast CI testing
+global:
+  network: regtest
+
+# Reduce resource requirements for testing
+bitcoin:
+  # Reduce memory footprint for testing
+  dbCache: 100  # Reduced from 4096MB
+  maxConnections: 10  # Reduced from 80
+  rpcWorkQueue: 16  # Reduced from 1000
+  maxMempool: 10  # Reduced from 600MB
+  
+  # No need for reindexing in regtest
+  reindex: 0
+  reindexChainstate: 0
+
+# Use smaller persistent storage for testing
+persistence:
+  enabled: true
+  size: 1Gi  # Much smaller than the default 900Gi
+
+# Set service type to ClusterIP for testing
+service:
+  type: ClusterIP
