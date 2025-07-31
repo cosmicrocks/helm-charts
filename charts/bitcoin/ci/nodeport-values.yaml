@@ -1,0 +1,3 @@
+# Test values for NodePort service type
+service:
+  type: NodePort

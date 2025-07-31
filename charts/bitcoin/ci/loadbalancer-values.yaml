@@ -1,0 +1,3 @@
+# Test values for LoadBalancer service type
+service:
+  type: LoadBalancer
