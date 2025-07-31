@@ -120,14 +120,14 @@ healthChecks:
 
 livenessProbe:
   httpGet:
-    path: /api/status
+    path: /
     port: api
   initialDelaySeconds: 30
   periodSeconds: 30
 
 readinessProbe:
   httpGet:
-    path: /api/status
+    path: /
     port: api
   initialDelaySeconds: 5
   periodSeconds: 10
