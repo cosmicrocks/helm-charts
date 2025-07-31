@@ -10,7 +10,7 @@ bitcoin:
   maxConnections: 10  # Reduced from 80
   rpcWorkQueue: 16  # Reduced from 1000
   maxMempool: 10  # Reduced from 600MB
-  
+
   # No need for reindexing in regtest
   reindex: 0
   reindexChainstate: 0

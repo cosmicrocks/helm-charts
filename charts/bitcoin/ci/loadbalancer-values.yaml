@@ -2,7 +2,7 @@
 global:
   network: regtest
 
-# Reduce resource requirements for testing  
+# Reduce resource requirements for testing
 bitcoin:
   dbCache: 100
   maxConnections: 10
