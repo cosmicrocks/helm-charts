@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   repository: ghcr.io/cosmicrocks/datum
   pullPolicy: Always
-  tag: "v0.3.1beta"
+  tag: "v0.4.0beta"
 
 imagePullSecrets: []
 nameOverride: ""
