@@ -58,22 +58,84 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for development guidelines.
 This repository uses automated releases through chart-releaser-action. New releases are only created when chart versions are incremented:
 
 - **Patch versions** (x.y.z → x.y.z+1): Bug fixes, configuration updates
-- **Minor versions** (x.y.z → x.y+1.0): New features, backwards-compatible changes  
+- **Minor versions** (x.y.z → x.y+1.0): New features, backwards-compatible changes
 - **Major versions** (x.y.z → x+1.0.0): Breaking changes
 
 ### Local Development
 
+#### Linting and Testing
+
+This repository uses multiple tools for linting and testing Helm charts:
+
+**1. Chart Testing (ct) - Recommended**
 ```bash
-# Lint charts
+# Install chart-testing
+brew install chart-testing  # macOS
+# or
+pip install yamale yamllint yamale  # Python packages
+
+# Lint all charts
+ct lint --config ct.yaml
+
+# Lint specific charts
+ct lint --config ct.yaml --charts charts/bitcoin charts/datum
+
+# Run full validation (lint + install test)
+ct install --config ct.yaml
+```
+
+**2. Helm Lint (Basic)**
+```bash
+# Basic Helm chart validation
 helm lint charts/bitcoin charts/datum
 
+# Lint with strict mode
+helm lint --strict charts/bitcoin charts/datum
+```
+
+**3. YAML Linting**
+```bash
+# Install yamllint
+brew install yamllint  # macOS
+# or
+pip install yamllint  # Python
+
+# Lint YAML files
+yamllint charts/ charts/bitcoin/ charts/datum/
+```
+
+**4. Pre-commit Hooks**
+```bash
+# Install pre-commit hooks
+pip install pre-commit
+pre-commit install
+
+# Run all hooks manually
+pre-commit run --all-files
+```
+
+#### Testing
+
+```bash
 # Test templating
 helm template bitcoin charts/bitcoin
 helm template datum charts/datum
 
 # Test installation (requires Kubernetes cluster)
 helm install bitcoin-test charts/bitcoin --dry-run
+helm install datum-test charts/datum --dry-run
+
+# Validate against schema
+helm template bitcoin charts/bitcoin | kubectl apply --dry-run=client -f -
 ```
+
+#### CI/CD Linting
+
+The repository automatically runs linting on pull requests using:
+- Chart Testing (ct) with custom configuration
+- Artifact Hub linting
+- YAML validation
+- Helm schema validation
 
 ## License
 
