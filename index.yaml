@@ -396,4 +396,26 @@ entries:
     urls:
     - https://github.com/cosmicrocks/helm-charts/releases/download/datum-1.0.0/datum-1.0.0.tgz
     version: 1.0.0
-generated: "2025-07-31T19:44:38.805807542Z"
+  ocis:
+  - apiVersion: v2
+    appVersion: 7.1.3
+    created: "2025-08-17T05:24:09.132284068Z"
+    description: ownCloud Infinite Scale (oCIS) Helm chart
+    digest: 1b332055e0e0f948ffbaa0dc35156336d018ddd4e1efe51ab2c4135530440ae7
+    keywords:
+    - owncloud
+    - ocis
+    maintainers:
+    - email: devops@cosmic.rocks
+      name: cosmicrocks
+      url: https://cosmic.rocks
+    name: ocis
+    sources:
+    - https://github.com/owncloud/ocis-charts
+    - https://github.com/owncloud/ocis
+    - https://github.com/cs3org/reva
+    type: application
+    urls:
+    - https://github.com/cosmicrocks/helm-charts/releases/download/ocis-0.7.0/ocis-0.7.0.tgz
+    version: 0.7.0
+generated: "2025-08-17T05:24:09.132332328Z"
