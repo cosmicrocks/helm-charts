@@ -5,9 +5,9 @@ keywords:
   - owncloud
   - ocis
 maintainers:
-  - name: ownCloud GmbH
-    email: devops@owncloud.com
-    url: https://owncloud.com
+  - name: cosmicrocks
+    email: devops@cosmic.rocks
+    url: https://cosmic.rocks
 type: application
 version: 0.7.0
 appVersion: 7.1.3

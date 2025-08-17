@@ -1821,7 +1821,7 @@ securityContext:
 # -- TopologySpreadConstraints controls how Pods of a service are spread across the cluster among failure-domains.
 # Defaults to allow skew no more then 1 node per node.
 # Passed through tpl and therefore needs to be configured as string.
-topologySpreadConstraints: # |
+# topologySpreadConstraints:  |
 #  - maxSkew: 1
 #    topologyKey: kubernetes.io/hostname
 #    whenUnsatisfiable: DoNotSchedule
@@ -4212,7 +4212,8 @@ services:
     # @schema
     # -- Maximum number of concurrent go-routines. Higher values can potentially get work done faster but will also cause
     # more load on the system. Values of 0 or below will be ignored and the default value will be used.
-    maxConcurrency: 20 # this differs from the oCIS product, see https://github.com/owncloud/ocis/issues/10647#issuecomment-2498338980
+    # this differs from the oCIS product, see https://github.com/owncloud/ocis/issues/10647#issuecomment-2498338980
+    maxConcurrency: 20
 
   # -- SSE service
   # @default -- see detailed service configuration options below
