@@ -1,0 +1,17 @@
+apiVersion: v2
+name: ocis
+description: ownCloud Infinite Scale (oCIS) Helm chart
+keywords:
+  - owncloud
+  - ocis
+maintainers:
+  - name: cosmicrocks
+    email: devops@cosmic.rocks
+    url: https://cosmic.rocks
+type: application
+version: 0.7.0
+appVersion: 7.1.3
+sources:
+  - https://github.com/owncloud/ocis-charts
+  - https://github.com/owncloud/ocis
+  - https://github.com/cs3org/reva

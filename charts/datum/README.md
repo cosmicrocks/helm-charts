@@ -1,6 +1,6 @@
 # datum
 
-![Version: 1.0.2](https://img.shields.io/badge/Version-1.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.4.0beta](https://img.shields.io/badge/AppVersion-v0.4.0beta-informational?style=flat-square)
+![Version: 1.0.5](https://img.shields.io/badge/Version-1.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v0.4.0beta](https://img.shields.io/badge/AppVersion-v0.4.0beta-informational?style=flat-square)
 
 A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 
@@ -41,7 +41,7 @@ A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 | image.tag | string | `"v0.4.0beta"` |  |
 | imagePullSecrets | list | `[]` |  |
 | ingress.enabled | bool | `false` |  |
-| livenessProbe.httpGet.path | string | `"/api/status"` |  |
+| livenessProbe.httpGet.path | string | `"/"` |  |
 | livenessProbe.httpGet.port | string | `"api"` |  |
 | livenessProbe.initialDelaySeconds | int | `30` |  |
 | livenessProbe.periodSeconds | int | `30` |  |
@@ -71,7 +71,7 @@ A Helm chart for Datum - a decentralized mining gateway for the OCEAN protocol.
 | pool.port | int | `28915` |  |
 | pool.protocolGlobalTimeout | int | `60` |  |
 | pool.pubkey | string | `"f21f2f0ef0aa1970468f22bad9bb7f4535146f8e4a8f646bebc93da3d89b1406f40d032f09a417d94dc068055df654937922d2c89522e3e8f6f0e649de473003"` |  |
-| readinessProbe.httpGet.path | string | `"/api/status"` |  |
+| readinessProbe.httpGet.path | string | `"/"` |  |
 | readinessProbe.httpGet.port | string | `"api"` |  |
 | readinessProbe.initialDelaySeconds | int | `5` |  |
 | readinessProbe.periodSeconds | int | `10` |  |
