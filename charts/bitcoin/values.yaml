@@ -67,7 +67,7 @@ priorityClassName: ""
 image:
   repository: ghcr.io/cosmicrocks/knots
   pullPolicy: Always
-  tag: "28.1.knots20250305"
+  tag: "29.2.knots20251010"
 
 metrics:
   podMonitor:

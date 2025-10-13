@@ -65,7 +65,7 @@ A Helm chart for Bitcoin knots for the OCEAN protocol.
 | global.service.ports.rpc | int | `8332` |  |
 | image.pullPolicy | string | `"Always"` |  |
 | image.repository | string | `"ghcr.io/cosmicrocks/knots"` |  |
-| image.tag | string | `"28.1.knots20250305"` |  |
+| image.tag | string | `"29.2.knots20251010"` |  |
 | imagePullSecrets | list | `[]` |  |
 | labels | object | `{}` |  |
 | metrics.podMonitor.enabled | bool | `false` |  |
