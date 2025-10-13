@@ -5,12 +5,12 @@ keywords:
   - bitcoin
   - knots
 type: application
-version: 2.0.2
+version: 2.0.3
 home: "https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin"
 sources:
   - "https://github.com/cosmicrocks/helm-charts/tree/main/charts/bitcoin"
 icon: "https://raw.githubusercontent.com/cosmicrocks/helm-charts/refs/heads/main/charts/bitcoin/icon.png"
-appVersion: "knots20250305"
+appVersion: "knots20251010"
 maintainers:
   - name: esomore
     email: itamar@cosmic.rocks
